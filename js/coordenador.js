@@ -187,11 +187,19 @@ class CoordenadorController {
     const el = document.getElementById('coordFechamentoLista');
     if (!el) return;
 
-    const solicitacoes = this._getSolicitacoes().filter(function(s) { return s.status === 'AGUARDANDO'; });
+    // Regra SENAI: Só exibe na fila da coordenação turmas onde 100% dos professores responsáveis fecharam sua etapa
+    const solicitacoes = this._getSolicitacoes().filter(function(s) {
+      if (s.status !== 'AGUARDANDO') return false;
+      const turma = (window.db.data.turmas || []).find(function(t) { return t.id === s.turmaId; });
+      if (turma && turma.professoresResponsaveis && turma.professoresResponsaveis.length > 0) {
+        return turma.professoresResponsaveis.every(function(p) { return p.fechado === true; });
+      }
+      return true;
+    });
     const self = this;
 
     if (solicitacoes.length === 0) {
-      el.innerHTML = '<div class="coord-empty-state" style="padding:32px 0;"><p>Nenhum diário aguardando aprovação. &#10003;</p></div>';
+      el.innerHTML = '<div class="coord-empty-state" style="padding:32px 0;"><p>Nenhum diário aguardando aprovação ou com todas as etapas docentes concluídas. &#10003;</p></div>';
       return;
     }
 
@@ -207,6 +215,24 @@ class CoordenadorController {
       const freqMedia = freqs.length ? (freqs.reduce(function(s,v) { return s+v; }, 0) / freqs.length).toFixed(1) : '—';
       const emRisco = alunos.filter(function(a) { return a.aluno.statusMatricula === 'ATIVO' && (a.media < 70 || a.freqPorcentagem < 75); }).length;
 
+      // Checklist dos professores responsáveis da turma
+      const profsResponsaveis = (turma && turma.professoresResponsaveis) ? turma.professoresResponsaveis : [];
+      const checklistHtml = profsResponsaveis.length ? `
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px 12px; margin:10px 0; font-size:12px;">
+          <strong style="color:#0f172a; display:block; margin-bottom:4px;">Checklist de Professores Responsáveis:</strong>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            ${profsResponsaveis.map(p => `
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span>${p.nome} <em style="color:#64748b;">(${p.papel || 'Docente'})</em></span>
+                <span class="badge ${p.fechado ? 'bg-success text-white' : 'bg-warning text-dark'}" style="font-size:10px; padding:2px 6px; border-radius:4px;">
+                  ${p.fechado ? '✓ Etapa Concluída' : '⏳ Pendente'}
+                </span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
       return '<div class="coord-fechamento-card">'
         + '<div class="fechamento-card-header">'
         + '<div>'
@@ -216,8 +242,9 @@ class CoordenadorController {
         + (docente ? docente.nome.split(' ').slice(0,2).join(' ') : '—')
         + '</strong> em ' + (sol.data || '') + '</div>'
         + '</div>'
-        + '<span class="coord-badge badge-aguardando">Aguardando Aprovação</span>'
+        + '<span class="coord-badge badge-aguardando">Aguardando Aprovação (100% Docente)</span>'
         + '</div>'
+        + checklistHtml
         + '<div class="fechamento-metricas">'
         + '<div class="fechamento-metrica"><span class="metrica-val">' + totalAtivos + '</span><span class="metrica-label">Alunos Ativos</span></div>'
         + '<div class="fechamento-metrica"><span class="metrica-val">' + mediaGeral + '</span><span class="metrica-label">Média Geral</span></div>'
@@ -503,29 +530,10 @@ class CoordenadorController {
       }
     }
 
-    const solicitacoes = this._getSolicitacoes();
-    const ids = solicitacoes.map(function(s) { return s.id; });
-    const newId = ids.length > 0 ? Math.max.apply(null, ids) + 1 : 1;
-
-    solicitacoes.push({
-      id: newId,
-      turmaId: turmaId,
-      docenteId: user ? user.id : 1,
-      observacao: obs,
-      data: new Date().toLocaleDateString('pt-BR'),
-      status: 'AGUARDANDO'
-    });
-    window.db.data.solicitacoesFechamento = solicitacoes;
-    this._persist();
-
-    // Notificação automática no sino
-    if (window.db && typeof window.db.adicionarNotificacao === 'function') {
-      window.db.adicionarNotificacao(
-        'SOLICITACAO',
-        `Solicitação de Fechamento • ${turma ? turma.codigo : 'Turma'}`,
-        `${user ? user.nome : 'Professor'} solicitou autorização de fechamento e consolidação de médias da turma ${turma ? turma.codigo : ''}.`,
-        user ? user.nome : 'Professor'
-      );
+    const res = window.db.fecharEtapaDocente(turmaId, user ? user.id : 1, obs);
+    if (!res.success) {
+      window.app.mostrarToast(res.msg, 'warning');
+      return;
     }
 
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
@@ -533,7 +541,7 @@ class CoordenadorController {
     }
 
     window.app.fecharModal('modalSolicitarFechamento');
-    window.app.mostrarToast('Médias fechadas! Solicitação enviada para autorização da coordenação.', 'success');
+    window.app.mostrarToast(res.msg, res.todosFechados ? 'success' : 'info');
     if (window.app && window.app.renderizarHomeProfessor) {
       window.app.renderizarHomeProfessor();
     }
@@ -620,12 +628,19 @@ class CoordenadorController {
     window.db.data.solicitacoesFechamento = solicitacoes;
     this._persist();
 
-    // Notificação automática de aprovação
+    // Regra SENAI: Reabre as etapas dos docentes responsáveis ao devolver
+    if (window.db && typeof window.db.reabrirEtapasDocentes === 'function') {
+      window.db.reabrirEtapasDocentes(sol.turmaId);
+    }
+
+    const turma = (window.db.data.turmas || []).find(function(t) { return t.id === sol.turmaId; });
+
+    // Notificação automática de devolução
     if (window.db && typeof window.db.adicionarNotificacao === 'function') {
       window.db.adicionarNotificacao(
-        'APROVACAO',
-        `Fechamento Autorizado • ${turma ? turma.codigo : 'Turma'}`,
-        `A coordenação autorizou e oficializou o fechamento das médias e frequências da turma ${turma ? turma.codigo : ''}.`,
+        'DEVOLUCAO',
+        `Diário Devolvido para Ajustes • ${turma ? turma.codigo : 'Turma'}`,
+        `A coordenação devolveu o diário da turma ${turma ? turma.codigo : ''} para ajustes docentes. Motivo: ${motivo.trim() || 'Verificar notas ou frequência pendentes'}.`,
         'Coordenação Pedagógica'
       );
     }
@@ -636,7 +651,7 @@ class CoordenadorController {
     const overlay = document.getElementById('modalDevolverMotivo');
     if (overlay) overlay.remove();
 
-    window.app.mostrarToast('Diário devolvido ao docente' + (motivo ? ' com observação.' : '.'), 'info');
+    window.app.mostrarToast('Diário devolvido aos professores responsáveis com sucesso.', 'info');
     this.renderDashboard();
     this.renderPainelFechamento();
   }

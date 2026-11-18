@@ -46,33 +46,25 @@
 
     <!-- Lista de Módulos da Barra Lateral Exclusiva por Portal -->
     <nav class="sidebar-nav">
-      <!-- 1. PORTAL DO COORDENADOR -->
+      <!-- 1. PORTAL DO COORDENADOR (ALTO NÍVEL) -->
       <div id="sidebarCoordSection" style="display:none; flex-direction:column; gap:6px; width:100%;">
         <button type="button" class="nav-item active" data-target-tab="coordenador"
-          onclick="window.app.navegarParaCoordTab('curricular')" title="Início — Painel da Coordenação">
+          onclick="window.app.navegarPara('coordenador')" title="Início — Painel da Coordenação">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
           <span>Início</span>
         </button>
-        <button type="button" class="nav-item" data-target-tab="coord-fechamento"
-          onclick="window.app.navegarParaCoordTab('fechamento')" title="Autorizações de Fechamento">
+        <button type="button" class="nav-item" data-target-tab="calendario"
+          onclick="window.app.navegarPara('calendario')" title="Calendário Oficial">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-          <span>Autorizações de Fechamento</span>
-        </button>
-        <button type="button" class="nav-item" data-target-tab="coord-turmas"
-          onclick="window.app.navegarParaCoordTab('turmas')" title="Turmas e Diários">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <rect x="2" y="7" width="20" height="14" rx="2" />
-            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-          </svg>
-          <span>Turmas e Diários</span>
+          <span>Calendário Oficial</span>
         </button>
         <button type="button" class="nav-item" data-target-tab="relatorios"
           onclick="window.app.navegarPara('relatorios')" title="Relatórios Oficiais">
@@ -85,36 +77,64 @@
         </button>
       </div>
 
-      <!-- 2. PORTAL DO ALUNO -->
-      <div id="sidebarAlunoSection" style="display:none; flex-direction:column; gap:6px; width:100%;">
-        <button type="button" class="nav-item active" data-target-tab="aluno"
-          onclick="window.app.navegarParaAlunoTab('visaoGeral')" title="Início — Portal do Aluno">
+      <!-- 2. PORTAL DAS ORIENTADORAS -->
+      <div id="sidebarOrientSection" style="display:none; flex-direction:column; gap:6px; width:100%;">
+        <button type="button" class="nav-item active" data-target-tab="orientador"
+          onclick="window.app.navegarPara('orientador')" title="Início / Acompanhamento da Orientação">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
-          <span>Início</span>
+          <span>Início / Acompanhamento</span>
         </button>
-        <button type="button" class="nav-item" data-target-tab="aluno-notas"
-          onclick="window.app.navegarParaAlunoTab('notas')" title="Minhas Disciplinas e Notas">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <line x1="10" y1="9" x2="8" y2="9"></line>
-          </svg>
-          <span>Minhas Disciplinas e Notas</span>
-        </button>
-        <button type="button" class="nav-item" data-target-tab="aluno-freq"
-          onclick="window.app.navegarParaAlunoTab('historicoAulas')" title="Frequência e Aulas">
+        <button type="button" class="nav-item" data-target-tab="calendario"
+          onclick="window.app.navegarPara('calendario')" title="Calendário Oficial">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="16" y1="2" x2="16" y2="6"></line>
             <line x1="8" y1="2" x2="8" y2="6"></line>
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-          <span>Frequência</span>
+          <span>Calendário Oficial</span>
+        </button>
+        <button type="button" class="nav-item" data-target-tab="relatorios"
+          onclick="window.app.navegarPara('relatorios')" title="Relatórios Oficiais">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Relatórios</span>
+        </button>
+      </div>
+
+      <!-- 3. PORTAL DO ALUNO -->
+      <div id="sidebarAlunoSection" style="display:none; flex-direction:column; gap:6px; width:100%;">
+        <button type="button" class="nav-item active" data-target-tab="aluno"
+          onclick="window.app.navegarPara('aluno')" title="Início — Portal do Aluno">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Início</span>
+        </button>
+        <button type="button" class="nav-item" data-target-tab="materiais"
+          onclick="window.app.navegarPara('materiais')" title="Material Didático">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Material Didático</span>
+        </button>
+        <button type="button" class="nav-item" data-target-tab="calendario"
+          onclick="window.app.navegarPara('calendario')" title="Calendário Oficial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Calendário Oficial</span>
         </button>
         <button type="button" class="nav-item" data-target-tab="aluno-pdf"
           onclick="window.relatoriosController.exportarPDFAluno('aluno_boletim')" title="Boletim / Relatórios PDF">
@@ -123,11 +143,11 @@
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
             <rect x="6" y="14" width="12" height="8"></rect>
           </svg>
-          <span>Boletim / Relatórios PDF</span>
+          <span>Boletim PDF</span>
         </button>
       </div>
 
-      <!-- 3. PORTAL DO PROFESSOR (MENU OFICIAL) -->
+      <!-- 4. PORTAL DO PROFESSOR (MENU OFICIAL LIMPO) -->
       <div id="sidebarProfSection" style="display:flex; flex-direction:column; gap:6px; width:100%;">
         <!-- Início -->
         <button type="button" class="nav-item active" data-target-tab="inicio"
@@ -137,6 +157,28 @@
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
           <span>Início</span>
+        </button>
+
+        <!-- Material Didático -->
+        <button type="button" class="nav-item" data-target-tab="materiais"
+          onclick="window.app.navegarPara('materiais')" title="Material Didático">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Material Didático</span>
+        </button>
+
+        <!-- Calendário Oficial -->
+        <button type="button" class="nav-item" data-target-tab="calendario"
+          onclick="window.app.navegarPara('calendario')" title="Calendário Oficial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Calendário Oficial</span>
         </button>
 
         <!-- Subturmas -->
@@ -173,18 +215,6 @@
             <line x1="16" y1="16" x2="16" y2="16"></line>
           </svg>
           <span>Assistente de IA</span>
-        </button>
-
-        <!-- Fechamento do Diário (Quebra em 2 linhas para nunca cortar) -->
-        <button type="button" class="nav-item nav-item-fechamento" data-target-tab="fechamento-diario"
-          onclick="window.app.abrirFechamentoDiario()" title="Solicitar Fechamento do Diário">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-          <span style="line-height: 1.2; white-space: normal;">Fechamento<br>do Diário</span>
         </button>
       </div>
     </nav>
@@ -723,6 +753,32 @@
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Card: Próximos Prazos Oficiais da Coordenação (Destaque Fechamento de Notas) -->
+              <div class="prof-dash-card" style="margin-top:20px; width:100%;" id="profCardProximosPrazos">
+                <div class="prof-dash-card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:rgba(225,29,72,0.1); display:flex; align-items:center; justify-content:center;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2.2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                    </div>
+                    <div>
+                      <span class="prof-dash-card-title" style="display:block; font-size:14px; font-weight:700; color:#0f172a;">Próximos Prazos Oficiais da Coordenação</span>
+                      <span style="font-size:12px; color:#64748b;">Acompanhamento das datas limites institucionais e fechamento de médias</span>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.app.navegarPara('calendario')" style="font-size:12px; padding:6px 12px; display:inline-flex; align-items:center; gap:6px;">
+                    Ver Calendário Oficial &rarr;
+                  </button>
+                </div>
+                <div id="profPrazosOficiaisContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px; margin-top:16px;">
+                  <!-- Preenchido dinamicamente via JS -->
                 </div>
               </div>
 
@@ -1630,6 +1686,32 @@
 
             <!-- SUB-ABA 1: SÍNTESE ACADÊMICA -->
             <div id="sinteseSubViewAcademica">
+              <!-- PAINEL SENAI: ETAPA DOCENTE E FECHAMENTO DA TURMA -->
+              <div id="sinteseFechamentoPanel" class="sintese-fechamento-panel" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:18px 20px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+                  <div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <h3 style="font-size:15px; font-weight:700; color:#0f172a; margin:0;">Etapa Docente e Fechamento da Turma (Regra SENAI)</h3>
+                      <span id="sinteseStatusDiarioBadge" class="badge" style="font-size:11px; padding:4px 8px; border-radius:6px; background:#e0f2fe; color:#0369a1; font-weight:600;">Status: Aberto</span>
+                    </div>
+                    <p style="font-size:12.5px; color:#64748b; margin:4px 0 0 0;">
+                      Cada professor responsável deve concluir sua etapa após validar o lançamento das notas (0 a 100) e frequência. A turma só é submetida à Coordenação após 100% dos docentes responsáveis concluírem.
+                    </p>
+                  </div>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <button type="button" id="btnConcluirEtapaDocenteSintese" class="btn btn-primary btn-sm" onclick="window.app.concluirEtapaDocenteAtual()" style="display:inline-flex; align-items:center; gap:6px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      Concluir e Fechar Minha Etapa (Professor Responsável)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Checklist de Professores Responsáveis -->
+                <div id="sinteseChecklistDocentesContainer" style="margin-top:14px; padding-top:12px; border-top:1px solid #f1f5f9;">
+                  <!-- Preenchido dinamicamente via JS -->
+                </div>
+              </div>
+
               <div class="sintese-table-card">
                 <div class="table-responsive">
                   <table class="sintese-figma-table table-green-header">
@@ -2705,6 +2787,32 @@
                 </div>
               </div>
 
+              <!-- Card: Calendário Oficial e Prazos Acadêmicos do Aluno -->
+              <div class="aluno-freq-card" style="margin-bottom: 22px; padding: 20px;" id="alunoCardPrazosOficiais">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:rgba(2,132,199,0.1); display:flex; align-items:center; justify-content:center;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 style="font-size:14px; font-weight:700; color:#0f172a; margin:0;">Calendário Oficial • Prazos Acadêmicos e Avaliações</h3>
+                      <p style="font-size:12px; color:#64748b; margin:2px 0 0 0;">Fique atento aos prazos de fechamento de notas e semanas avaliativas</p>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.app.navegarPara('calendario')" style="font-size:12px; padding:6px 12px;">
+                    Calendário Completo &rarr;
+                  </button>
+                </div>
+                <div id="alunoPrazosOficiaisContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+                  <!-- Preenchido dinamicamente via JS -->
+                </div>
+              </div>
+
               <!-- Abas Internas: Visão Geral / Histórico de Aulas / Boletim -->
               <div class="aluno-freq-tabs-nav">
                 <button type="button" class="aluno-freq-tab-button active" id="tabBtnAluno_visaoGeral"
@@ -3159,6 +3267,159 @@
 
           </section>
 
+          <!-- ===================================================================
+             ABA 13: MATERIAL DIDÁTICO (PROFESSOR -> ALUNO)
+             =================================================================== -->
+          <section id="tabSection_materiais" class="tab-view-section" style="display: none;">
+            <div class="materiais-container" style="max-width: 1200px; margin: 0 auto; padding: 24px 20px;">
+              
+              <!-- Header da Página -->
+              <div class="sintese-figma-topbar" style="margin-bottom: 24px;">
+                <div class="sintese-figma-titlebox">
+                  <div class="sintese-figma-icon" style="background: rgba(3, 105, 161, 0.1); color: #0284c7;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 class="sintese-figma-title">Material Didático</h1>
+                    <p class="sintese-figma-uc">Apostilas, PDFs, links complementares e recursos de aprendizagem.</p>
+                  </div>
+                </div>
+
+                <!-- Filtro de Turma -->
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <label for="selectMateriaisTurmaFiltro" style="font-size: 13px; font-weight: 600; color: #475569;">Turma / Disciplina:</label>
+                  <select id="selectMateriaisTurmaFiltro" class="filter-select" onchange="window.app.filtrarMateriaisPorTurma(this.value)" style="min-width: 220px;">
+                    <!-- Preenchido via JS -->
+                  </select>
+                </div>
+              </div>
+
+              <!-- Formulário de Publicação de Material (Exclusivo Docente / Coordenação) -->
+              <div id="cardPublicarMaterialDocente" class="sintese-table-card" style="padding: 22px; margin-bottom: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M12 5v14M5 12h14"></path></svg>
+                    Publicar Novo Material para os Alunos
+                  </h3>
+                  <span class="badge" style="background: #f0fdf4; color: #166534; font-size: 11.5px; padding: 4px 10px; border-radius: 6px;">Portal do Docente</span>
+                </div>
+
+                <form id="formPublicarMaterial" onsubmit="event.preventDefault(); window.app.salvarMaterialDidatico(); return false;" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                  <div>
+                    <label class="filter-label" style="font-weight: 600; margin-bottom: 4px; display: block;">Título do Material *</label>
+                    <input type="text" id="inputMaterialTitulo" class="filter-select" style="width: 100%;" placeholder="Ex: Apostila de CSS Grid e Flexbox" required>
+                  </div>
+
+                  <div>
+                    <label class="filter-label" style="font-weight: 600; margin-bottom: 4px; display: block;">Tipo de Material *</label>
+                    <select id="selectMaterialTipo" class="filter-select" style="width: 100%;" onchange="window.app.alternarTipoMaterialInput(this.value)">
+                      <option value="PDF">Documento PDF</option>
+                      <option value="Apostila">Apostila Completa</option>
+                      <option value="Link">Link Externo / Repositório</option>
+                    </select>
+                  </div>
+
+                  <div id="boxUploadArquivoMaterial">
+                    <label class="filter-label" style="font-weight: 600; margin-bottom: 4px; display: block;">Arquivo (Upload) *</label>
+                    <input type="file" id="inputMaterialFile" class="filter-select" style="width: 100%; padding: 6px;" onchange="window.app.processarArquivoMaterial(this)">
+                  </div>
+
+                  <div id="boxUrlMaterial" style="display: none;">
+                    <label class="filter-label" style="font-weight: 600; margin-bottom: 4px; display: block;">URL / Link da Web *</label>
+                    <input type="url" id="inputMaterialUrl" class="filter-select" style="width: 100%;" placeholder="https://github.com/exemplo">
+                  </div>
+
+                  <div style="grid-column: 1 / -1;">
+                    <label class="filter-label" style="font-weight: 600; margin-bottom: 4px; display: block;">Descrição / Instruções aos Alunos</label>
+                    <textarea id="inputMaterialDescricao" class="filter-select" style="width: 100%; height: 60px; resize: vertical;" placeholder="Orientações de leitura, capítulos recomendados ou objetivos de aprendizagem..."></textarea>
+                  </div>
+
+                  <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      Publicar Material
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Lista de Materiais Cadastrados -->
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Materiais Disponíveis para Estudo</h3>
+                  <span id="badgeContadorMateriais" class="badge" style="background: #e2e8f0; color: #334155; font-size: 12px; padding: 4px 10px; border-radius: 6px;">0 materiais</span>
+                </div>
+
+                <div id="gridMateriaisDidaticos" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px;">
+                  <!-- Renderizado via JS -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ===================================================================
+             ABA 14: CALENDÁRIO OFICIAL (COORDENADOR -> ORIENTADORA, PROFESSOR E ALUNO)
+             =================================================================== -->
+          <section id="tabSection_calendario" class="tab-view-section" style="display: none;">
+            <div class="calendario-container" style="max-width: 1200px; margin: 0 auto; padding: 24px 20px;">
+
+              <!-- Header da Página -->
+              <div class="sintese-figma-topbar" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
+                <div class="sintese-figma-titlebox">
+                  <div class="sintese-figma-icon" style="background: rgba(225, 29, 72, 0.1); color: #e11d48;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 class="sintese-figma-title">Calendário Letivo Oficial</h1>
+                    <p class="sintese-figma-uc">Prazos de fechamento de notas, semanas avaliativas, dias letivos e recessos.</p>
+                  </div>
+                </div>
+
+                <!-- Botão de Ação: Apenas Coordenação / Orientadora -->
+                <div id="calendarioAcoesCoord" style="display: flex; gap: 10px; align-items: center;">
+                  <button type="button" class="btn btn-primary" onclick="window.app.abrirModalNovoEventoCalendario()" style="display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Cadastrar Data Oficial
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filtros de Categorias -->
+              <div class="sintese-figma-tabs" style="margin-bottom: 20px;">
+                <button type="button" class="sintese-tab-btn active" data-cal-cat="TODOS" onclick="window.app.filtrarCalendarioCategoria('TODOS')">
+                  <span>Todos os Eventos</span>
+                </button>
+                <button type="button" class="sintese-tab-btn" data-cal-cat="Prazo de Fechamento de Notas" onclick="window.app.filtrarCalendarioCategoria('Prazo de Fechamento de Notas')">
+                  <span style="color: #e11d48; font-weight: 700;">● Prazos de Fechamento</span>
+                </button>
+                <button type="button" class="sintese-tab-btn" data-cal-cat="Semana de Avaliações" onclick="window.app.filtrarCalendarioCategoria('Semana de Avaliações')">
+                  <span>Semana de Avaliações</span>
+                </button>
+                <button type="button" class="sintese-tab-btn" data-cal-cat="Dia Letivo" onclick="window.app.filtrarCalendarioCategoria('Dia Letivo')">
+                  <span>Dias Letivos</span>
+                </button>
+                <button type="button" class="sintese-tab-btn" data-cal-cat="Feriado / Recesso" onclick="window.app.filtrarCalendarioCategoria('Feriado / Recesso')">
+                  <span>Feriados / Recessos</span>
+                </button>
+              </div>
+
+              <!-- Lista de Eventos Oficiais -->
+              <div id="gridEventosCalendario" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px;">
+                <!-- Preenchido via JS -->
+              </div>
+
+            </div>
+          </section>
+
         </div>
       </main>
     </div>
@@ -3566,33 +3827,81 @@
     </div>
   </div>
 
-  <!-- Modal: Solicitar Fechamento do Diário (Docente) -->
+  <!-- Modal: Concluir Etapa / Solicitar Fechamento do Diário (Docente SENAI) -->
   <div id="modalSolicitarFechamento" class="modal-overlay">
-    <div class="modal-box" style="max-width:480px;">
+    <div class="modal-box" style="max-width:540px;">
       <div class="modal-header">
-        <h3 class="modal-title">Solicitar Fechamento do Diário</h3>
+        <h3 class="modal-title">Etapa Docente e Fechamento do Diário</h3>
         <button type="button" class="btn-close-modal"
           onclick="window.app.fecharModal('modalSolicitarFechamento')">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
-          O diário permanecerá editável até a aprovação oficial pela coordenação.
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">
+          Conforme as diretrizes institucionais do SENAI-SP, cada <strong>Professor Responsável</strong> deve concluir individualmente sua etapa após lançar as notas (0 a 100) e frequências.
         </p>
         <div class="login-form-group" style="margin-bottom:14px;">
           <label class="filter-label">Turma</label>
-          <select id="selectFechamentoTurma" class="filter-select" style="width:100%;"></select>
+          <select id="selectFechamentoTurma" class="filter-select" style="width:100%;" onchange="window.app.atualizarChecklistModalFechamento(this.value)"></select>
         </div>
+
+        <!-- Checklist de Professores Responsáveis no Modal -->
+        <div id="modalFechamentoChecklistContainer" style="margin-bottom:14px;"></div>
+
         <div class="login-form-group">
-          <label class="filter-label">Observação (opcional)</label>
-          <textarea id="inputFechamentoObs" class="filter-select" style="width:100%; height:80px; resize:vertical;"
-            placeholder="Informe pendências ou observações para a coordenação..."></textarea>
+          <label class="filter-label">Observações / Parecer do Professor (opcional)</label>
+          <textarea id="inputFechamentoObs" class="filter-select" style="width:100%; height:70px; resize:vertical;"
+            placeholder="Informe observações pedagógicas ou apontamentos para a coordenação..."></textarea>
         </div>
       </div>
       <div class="modal-footer" style="justify-content:flex-end; display:flex; gap:8px;">
         <button type="button" class="btn btn-secondary"
           onclick="window.app.fecharModal('modalSolicitarFechamento')">Cancelar</button>
-        <button type="button" class="btn btn-primary"
-          onclick="window.coordenadorController.confirmarSolicitacaoFechamento()">Enviar Solicitação</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmarEtapaDocenteModal"
+          onclick="window.coordenadorController.confirmarSolicitacaoFechamento()">Concluir Minha Etapa Docente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Cadastrar/Editar Evento do Calendário Oficial (Coordenação / Orientação) -->
+  <div id="modalEventoCalendario" class="modal-overlay">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalEventoCalendarioTitle">Cadastrar Data Oficial no Calendário</h3>
+        <button type="button" class="btn-close-modal" onclick="window.app.fecharModal('modalEventoCalendario')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="inputEventoCalendarioId" value="">
+        <div class="login-form-group" style="margin-bottom:12px;">
+          <label class="filter-label">Título do Evento *</label>
+          <input type="text" id="inputEventoTitulo" class="filter-select" style="width:100%;" placeholder="Ex: Prazo Limite de Fechamento de Notas" required>
+        </div>
+        <div class="login-form-group" style="margin-bottom:12px;">
+          <label class="filter-label">Categoria Institucional *</label>
+          <select id="selectEventoCategoria" class="filter-select" style="width:100%;">
+            <option value="Prazo de Fechamento de Notas">Prazo de Fechamento de Notas (Destaque)</option>
+            <option value="Semana de Avaliações">Semana de Avaliações</option>
+            <option value="Dia Letivo">Dia Letivo</option>
+            <option value="Feriado / Recesso">Feriado / Recesso</option>
+          </select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label class="filter-label">Data Início *</label>
+            <input type="date" id="inputEventoDataInicio" class="filter-select" style="width:100%;" required>
+          </div>
+          <div>
+            <label class="filter-label">Data Término</label>
+            <input type="date" id="inputEventoDataFim" class="filter-select" style="width:100%;">
+          </div>
+        </div>
+        <div class="login-form-group">
+          <label class="filter-label">Descrição / Orientações Pedagógicas</label>
+          <textarea id="inputEventoDescricao" class="filter-select" style="width:100%; height:75px; resize:vertical;" placeholder="Detalhes, prazos e orientações aos professores e alunos..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end; display:flex; gap:8px;">
+        <button type="button" class="btn btn-secondary" onclick="window.app.fecharModal('modalEventoCalendario')">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="window.app.salvarEventoCalendario()">Salvar no Calendário</button>
       </div>
     </div>
   </div>

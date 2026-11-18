@@ -646,6 +646,7 @@ class AppController {
     // Inicialização específica da aba
     if (tabId === 'inicio') {
       this.renderizarHomeProfessor();
+      this.renderizarPrazosOficiaisInicio();
     } else if (tabId === 'cursos') {
       this.renderizarCardsTurmas();
     } else if (tabId === 'diario') {
@@ -658,10 +659,15 @@ class AppController {
       window.notasController.init();
     } else if (tabId === 'sintese') {
       window.sinteseController.init();
+      this.renderizarChecklistFechamentoSintese();
     } else if (tabId === 'relatorios') {
       window.relatoriosController.init();
     } else if (tabId === 'compensacoes') {
       window.compensacoesController.init();
+    } else if (tabId === 'materiais') {
+      this.renderizarMateriais();
+    } else if (tabId === 'calendario') {
+      this.renderizarCalendario();
     } else if (tabId === 'assistente') {
       if (window.assistenteIAController) {
         window.assistenteIAController.init();
@@ -681,6 +687,7 @@ class AppController {
       }
     } else if (tabId === 'aluno') {
       this.renderizarPortalAluno();
+      this.renderizarPrazosOficiaisAluno();
     } else if (tabId === 'orientador') {
       this.renderizarPortalOrientador();
       if (window.orientadorCompController) { window.orientadorCompController.init(); }
@@ -1145,12 +1152,14 @@ class AppController {
 
     // Sidebar: exibir/ocultar seções exclusivas de cada portal
     const coordSection = document.getElementById('sidebarCoordSection');
+    const orientSection = document.getElementById('sidebarOrientSection');
     const alunoSection = document.getElementById('sidebarAlunoSection');
     const profSection = document.getElementById('sidebarProfSection');
 
     if (coordSection) coordSection.style.display = isCoordenador ? 'flex' : 'none';
+    if (orientSection) orientSection.style.display = isOrientador ? 'flex' : 'none';
     if (alunoSection) alunoSection.style.display = isAluno ? 'flex' : 'none';
-    if (profSection) profSection.style.display = (isProfessor && !isCoordenador && !isAluno) ? 'flex' : 'none';
+    if (profSection) profSection.style.display = (isProfessor && !isCoordenador && !isAluno && !isOrientador) ? 'flex' : 'none';
 
     // Tag no header: label do portal
     const portalTag = document.querySelector('.portal-tag-pill');
@@ -2316,6 +2325,547 @@ class AppController {
 
     this.fecharModal('modalAlterarSenha');
     this.mostrarToast('Senha atualizada com sucesso!', 'success');
+  }
+
+  // =========================================================================
+  // GESTÃO DE MATERIAL DIDÁTICO (PROFESSOR -> ALUNO)
+  // =========================================================================
+  renderizarMateriais() {
+    if (!window.db) return;
+    const isAluno = window.auth && window.auth.isAluno && window.auth.isAluno();
+    const cardDocente = document.getElementById('cardPublicarMaterialDocente');
+    if (cardDocente) {
+      cardDocente.style.display = isAluno ? 'none' : 'block';
+    }
+
+    const selectTurma = document.getElementById('selectMateriaisTurmaFiltro');
+    if (selectTurma) {
+      const turmas = window.db.getTurmas() || [];
+      let optionsHtml = '<option value="TODAS">Todas as Turmas / Unidades</option>';
+      turmas.forEach(t => {
+        optionsHtml += `<option value="${t.id}">${t.codigo} — ${t.nome}</option>`;
+      });
+      selectTurma.innerHTML = optionsHtml;
+
+      if (!isAluno && this.turmaAtiva) {
+        selectTurma.value = this.turmaAtiva.id;
+      } else if (isAluno) {
+        const aluno = window.db.getAlunoLogado();
+        if (aluno && aluno.turmaId) {
+          selectTurma.value = aluno.turmaId;
+        }
+      }
+    }
+
+    const selVal = selectTurma ? selectTurma.value : (this.turmaAtiva ? this.turmaAtiva.id : null);
+    this.filtrarMateriaisPorTurma(selVal);
+  }
+
+  filtrarMateriaisPorTurma(turmaId) {
+    if (!window.db) return;
+    const isAluno = window.auth && window.auth.isAluno && window.auth.isAluno();
+    const grid = document.getElementById('gridMateriaisDidaticos');
+    const badge = document.getElementById('badgeContadorMateriais');
+    if (!grid) return;
+
+    let lista = [];
+    if (!turmaId || turmaId === 'TODAS') {
+      lista = window.db.getMateriais();
+    } else {
+      lista = window.db.getMateriais(turmaId);
+    }
+
+    if (badge) badge.textContent = `${lista.length} ${lista.length === 1 ? 'material' : 'materiais'}`;
+
+    if (!lista || lista.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 12px; color: #64748b;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" style="margin-bottom: 8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <p style="font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 4px;">Nenhum material didático publicado para esta turma.</p>
+          <span style="font-size: 12.5px;">${isAluno ? 'Novas apostilas e recursos serão disponibilizados pelos seus professores.' : 'Utilize o formulário acima para publicar documentos, apostilas ou links úteis.'}</span>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = lista.map(mat => {
+      let badgeBg = '#fee2e2';
+      let badgeColor = '#991b1b';
+      let icon = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline>';
+
+      if (mat.tipo === 'Link') {
+        badgeBg = '#dcfce7';
+        badgeColor = '#166534';
+        icon = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
+      } else if (mat.tipo === 'Apostila') {
+        badgeBg = '#e0f2fe';
+        badgeColor = '#0369a1';
+        icon = '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>';
+      }
+
+      const turma = (window.db.data.turmas || []).find(t => t.id === mat.turmaId);
+
+      return `
+        <div class="sintese-table-card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="badge" style="background: ${badgeBg}; color: ${badgeColor}; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">${icon}</svg>
+                ${mat.tipo}
+              </span>
+              <span style="font-size: 11.5px; color: #94a3b8;">${mat.data || ''}</span>
+            </div>
+
+            <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0; line-height: 1.35;">${mat.titulo}</h4>
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 14px 0; line-height: 1.45;">${mat.descricao || 'Material didático disponibilizado para acompanhamento das aulas.'}</p>
+
+            <div style="font-size: 11.5px; color: #475569; background: #f8fafc; padding: 6px 10px; border-radius: 6px; margin-bottom: 14px; border: 1px solid #f1f5f9;">
+              <div><strong>Turma:</strong> ${turma ? turma.codigo : 'Geral'}</div>
+              <div><strong>Docente:</strong> ${mat.docenteNome || 'Professor'}</div>
+              <div><strong>Arquivo:</strong> ${mat.arquivoNome || 'documento'} (${mat.tamanho || 'Arquivo'})</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #f1f5f9;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.app.visualizarOuBaixarMaterial(${mat.id})" style="flex: 1; display: inline-flex; justify-content: center; align-items: center; gap: 6px; font-size: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              ${mat.tipo === 'Link' ? 'Acessar Link' : 'Visualizar / Baixar Material'}
+            </button>
+            ${!isAluno ? `
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.excluirMaterialDidatico(${mat.id})" title="Excluir Material" style="color: #ef4444; border-color: #fecaca; padding: 6px 10px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  alternarTipoMaterialInput(tipo) {
+    const boxUpload = document.getElementById('boxUploadArquivoMaterial');
+    const boxUrl = document.getElementById('boxUrlMaterial');
+    if (tipo === 'Link') {
+      if (boxUpload) boxUpload.style.display = 'none';
+      if (boxUrl) boxUrl.style.display = 'block';
+    } else {
+      if (boxUpload) boxUpload.style.display = 'block';
+      if (boxUrl) boxUrl.style.display = 'none';
+    }
+  }
+
+  processarArquivoMaterial(input) {
+    if (input.files && input.files[0]) {
+      this._arquivoMaterialSelecionado = input.files[0];
+    }
+  }
+
+  salvarMaterialDidatico() {
+    if (!window.db) return;
+    const user = window.auth.getUser() || {};
+    const titulo = (document.getElementById('inputMaterialTitulo') || {}).value || '';
+    const tipo = (document.getElementById('selectMaterialTipo') || {}).value || 'PDF';
+    const descricao = (document.getElementById('inputMaterialDescricao') || {}).value || '';
+    const selectTurma = document.getElementById('selectMateriaisTurmaFiltro');
+    let turmaId = selectTurma ? Number(selectTurma.value) : (this.turmaAtiva ? this.turmaAtiva.id : 1);
+    if (!turmaId || isNaN(turmaId)) turmaId = 1;
+
+    let arquivoNome = 'documento.pdf';
+    let tamanho = '1.5 MB';
+    let url = '#';
+
+    if (tipo === 'Link') {
+      url = (document.getElementById('inputMaterialUrl') || {}).value || '#';
+      arquivoNome = url;
+      tamanho = 'Link Externo';
+    } else if (this._arquivoMaterialSelecionado) {
+      arquivoNome = this._arquivoMaterialSelecionado.name;
+      tamanho = (this._arquivoMaterialSelecionado.size / 1024 / 1024).toFixed(1) + ' MB';
+    } else {
+      arquivoNome = tipo === 'PDF' ? 'material_aula_senai.pdf' : 'apostila_oficial_senai.pdf';
+      tamanho = '2.4 MB';
+    }
+
+    if (!titulo.trim()) {
+      this.mostrarToast('Informe o título do material didático.', 'warning');
+      return;
+    }
+
+    window.db.addMaterial({
+      turmaId,
+      titulo: titulo.trim(),
+      tipo,
+      descricao: descricao.trim(),
+      arquivoNome,
+      tamanho,
+      url,
+      docenteNome: user.nome || 'Professor Responsável'
+    });
+
+    // Limpar formulário
+    const inpTit = document.getElementById('inputMaterialTitulo');
+    if (inpTit) inpTit.value = '';
+    const inpDesc = document.getElementById('inputMaterialDescricao');
+    if (inpDesc) inpDesc.value = '';
+    const inpFile = document.getElementById('inputMaterialFile');
+    if (inpFile) inpFile.value = '';
+    const inpUrl = document.getElementById('inputMaterialUrl');
+    if (inpUrl) inpUrl.value = '';
+    this._arquivoMaterialSelecionado = null;
+
+    this.mostrarToast('Material didático publicado com sucesso!', 'success');
+    this.filtrarMateriaisPorTurma(turmaId);
+  }
+
+  excluirMaterialDidatico(id) {
+    if (!confirm('Deseja realmente remover este material didático?')) return;
+    window.db.excluirMaterial(id);
+    this.mostrarToast('Material didático removido.', 'info');
+    const selectTurma = document.getElementById('selectMateriaisTurmaFiltro');
+    const turmaId = selectTurma ? selectTurma.value : null;
+    this.filtrarMateriaisPorTurma(turmaId);
+  }
+
+  visualizarOuBaixarMaterial(id) {
+    const lista = window.db.getMateriais();
+    const item = (lista || []).find(m => m.id === Number(id));
+    if (!item) return;
+
+    if (item.tipo === 'Link' && item.url && item.url !== '#') {
+      window.open(item.url, '_blank');
+      return;
+    }
+
+    this.mostrarToast(`Download iniciado: "${item.arquivoNome}" (${item.tamanho})`, 'success');
+  }
+
+  // =========================================================================
+  // GESTÃO DO CALENDÁRIO OFICIAL DA COORDENAÇÃO
+  // =========================================================================
+  renderizarCalendario(categoriaFiltro = 'TODOS') {
+    if (!window.db) return;
+    const isCoordOrOrient = window.auth && (window.auth.isCoordenacao() || window.auth.isOrientador());
+    const boxAcoes = document.getElementById('calendarioAcoesCoord');
+    if (boxAcoes) {
+      boxAcoes.style.display = isCoordOrOrient ? 'flex' : 'none';
+    }
+
+    let eventos = window.db.getEventosCalendario() || [];
+    if (categoriaFiltro && categoriaFiltro !== 'TODOS') {
+      eventos = eventos.filter(e => e.categoria === categoriaFiltro);
+    }
+
+    const grid = document.getElementById('gridEventosCalendario');
+    if (!grid) return;
+
+    if (eventos.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 12px; color: #64748b;">
+          <p style="font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 4px;">Nenhum evento registrado nesta categoria do calendário oficial.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = eventos.map(ev => {
+      const isFechamento = ev.categoria === 'Prazo de Fechamento de Notas' || ev.destaque;
+      let badgeBg = '#f1f5f9';
+      let badgeColor = '#475569';
+      let cardBorder = '#e2e8f0';
+
+      if (isFechamento) {
+        badgeBg = '#fee2e2';
+        badgeColor = '#991b1b';
+        cardBorder = '#fca5a5';
+      } else if (ev.categoria === 'Semana de Avaliações') {
+        badgeBg = '#f3e8ff';
+        badgeColor = '#6b21a8';
+        cardBorder = '#d8b4fe';
+      } else if (ev.categoria === 'Dia Letivo') {
+        badgeBg = '#e0f2fe';
+        badgeColor = '#0369a1';
+      }
+
+      // Formatador de data amigável
+      const dtIni = ev.data ? ev.data.split('-').reverse().join('/') : '—';
+      const dtFim = (ev.dataFim && ev.dataFim !== ev.data) ? ev.dataFim.split('-').reverse().join('/') : null;
+      const dataLabel = dtFim ? `${dtIni} até ${dtFim}` : dtIni;
+
+      return `
+        <div class="sintese-table-card" style="padding: 20px; border: 1.5px solid ${cardBorder}; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 8px;">
+              <span class="badge" style="background: ${badgeBg}; color: ${badgeColor}; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                ${isFechamento ? '⚠️ ' : ''}${ev.categoria}
+              </span>
+              <span style="font-size: 12px; font-weight: 700; color: #0f172a; background: #f8fafc; padding: 4px 8px; border-radius: 6px; border: 1px solid #f1f5f9;">
+                📅 ${dataLabel}
+              </span>
+            </div>
+
+            <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; line-height: 1.35;">${ev.titulo}</h4>
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 14px 0; line-height: 1.45;">${ev.descricao || 'Data oficial do calendário acadêmico SENAI-SP.'}</p>
+          </div>
+
+          ${isCoordOrOrient ? `
+            <div style="display: flex; gap: 8px; justify-content: flex-end; padding-top: 10px; border-top: 1px solid #f1f5f9;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.abrirModalEditarEventoCalendario(${ev.id})" style="font-size: 11.5px; padding: 4px 10px;">
+                Editar
+              </button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.excluirEventoCalendario(${ev.id})" style="font-size: 11.5px; padding: 4px 10px; color: #ef4444; border-color: #fecaca;">
+                Excluir
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  filtrarCalendarioCategoria(categoria) {
+    document.querySelectorAll('.sintese-tab-btn[data-cal-cat]').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-cal-cat') === categoria);
+    });
+    this.renderizarCalendario(categoria);
+  }
+
+  abrirModalNovoEventoCalendario() {
+    const inpId = document.getElementById('inputEventoCalendarioId');
+    if (inpId) inpId.value = '';
+    const inpTit = document.getElementById('inputEventoTitulo');
+    if (inpTit) inpTit.value = '';
+    const selCat = document.getElementById('selectEventoCategoria');
+    if (selCat) selCat.value = 'Prazo de Fechamento de Notas';
+    const inpIni = document.getElementById('inputEventoDataInicio');
+    if (inpIni) inpIni.value = new Date().toISOString().split('T')[0];
+    const inpFim = document.getElementById('inputEventoDataFim');
+    if (inpFim) inpFim.value = '';
+    const inpDesc = document.getElementById('inputEventoDescricao');
+    if (inpDesc) inpDesc.value = '';
+
+    const titModal = document.getElementById('modalEventoCalendarioTitle');
+    if (titModal) titModal.textContent = 'Cadastrar Data Oficial no Calendário';
+
+    this.abrirModal('modalEventoCalendario');
+  }
+
+  abrirModalEditarEventoCalendario(id) {
+    const eventos = window.db.getEventosCalendario() || [];
+    const item = eventos.find(e => e.id === Number(id));
+    if (!item) return;
+
+    const inpId = document.getElementById('inputEventoCalendarioId');
+    if (inpId) inpId.value = item.id;
+    const inpTit = document.getElementById('inputEventoTitulo');
+    if (inpTit) inpTit.value = item.titulo || '';
+    const selCat = document.getElementById('selectEventoCategoria');
+    if (selCat) selCat.value = item.categoria || 'Dia Letivo';
+    const inpIni = document.getElementById('inputEventoDataInicio');
+    if (inpIni) inpIni.value = item.data || '';
+    const inpFim = document.getElementById('inputEventoDataFim');
+    if (inpFim) inpFim.value = item.dataFim || '';
+    const inpDesc = document.getElementById('inputEventoDescricao');
+    if (inpDesc) inpDesc.value = item.descricao || '';
+
+    const titModal = document.getElementById('modalEventoCalendarioTitle');
+    if (titModal) titModal.textContent = 'Editar Data Oficial do Calendário';
+
+    this.abrirModal('modalEventoCalendario');
+  }
+
+  salvarEventoCalendario() {
+    if (!window.db) return;
+    const inpId = document.getElementById('inputEventoCalendarioId');
+    const id = inpId ? inpId.value : '';
+    const titulo = (document.getElementById('inputEventoTitulo') || {}).value || '';
+    const categoria = (document.getElementById('selectEventoCategoria') || {}).value || 'Dia Letivo';
+    const data = (document.getElementById('inputEventoDataInicio') || {}).value || '';
+    const dataFim = (document.getElementById('inputEventoDataFim') || {}).value || '';
+    const descricao = (document.getElementById('inputEventoDescricao') || {}).value || '';
+
+    if (!titulo.trim() || !data) {
+      this.mostrarToast('Preencha o título e a data de início.', 'warning');
+      return;
+    }
+
+    if (id) {
+      window.db.editarEventoCalendario(id, { titulo: titulo.trim(), categoria, data, dataFim, descricao: descricao.trim() });
+      this.mostrarToast('Evento atualizado no calendário oficial.', 'success');
+    } else {
+      window.db.addEventoCalendario({ titulo: titulo.trim(), categoria, data, dataFim, descricao: descricao.trim() });
+      this.mostrarToast('Data oficial cadastrada com sucesso!', 'success');
+    }
+
+    this.fecharModal('modalEventoCalendario');
+    this.renderizarCalendario();
+    this.renderizarPrazosOficiaisInicio();
+    this.renderizarPrazosOficiaisAluno();
+  }
+
+  excluirEventoCalendario(id) {
+    if (!confirm('Deseja excluir esta data do calendário oficial?')) return;
+    window.db.excluirEventoCalendario(id);
+    this.mostrarToast('Evento removido do calendário.', 'info');
+    this.renderizarCalendario();
+    this.renderizarPrazosOficiaisInicio();
+    this.renderizarPrazosOficiaisAluno();
+  }
+
+  // --- Renderização dos cards de Próximos Prazos na Home (Professor e Aluno) ---
+  renderizarPrazosOficiaisInicio() {
+    const el = document.getElementById('profPrazosOficiaisContainer');
+    if (!el || !window.db) return;
+
+    const eventos = window.db.getEventosCalendario() || [];
+    // Prioriza prazos de fechamento e semanas de avaliação
+    const proximos = eventos.slice(0, 4);
+
+    el.innerHTML = proximos.map(ev => {
+      const isFechamento = ev.categoria === 'Prazo de Fechamento de Notas';
+      const dt = ev.data ? ev.data.split('-').reverse().join('/') : '';
+      return `
+        <div style="background: ${isFechamento ? '#fff1f2' : '#f8fafc'}; border: 1px solid ${isFechamento ? '#fecdd3' : '#e2e8f0'}; border-radius: 8px; padding: 12px 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: ${isFechamento ? '#be123c' : '#0369a1'};">
+              ${isFechamento ? '⚠️ PRAZO INSTITUCIONAL' : ev.categoria}
+            </span>
+            <span style="font-size: 11px; font-weight: 600; color: #475569;">📅 ${dt}</span>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3;">${ev.titulo}</div>
+          <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">${ev.descricao || ''}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  renderizarPrazosOficiaisAluno() {
+    const el = document.getElementById('alunoPrazosOficiaisContainer');
+    if (!el || !window.db) return;
+
+    const eventos = window.db.getEventosCalendario() || [];
+    const proximos = eventos.slice(0, 4);
+
+    el.innerHTML = proximos.map(ev => {
+      const isFechamento = ev.categoria === 'Prazo de Fechamento de Notas';
+      const dt = ev.data ? ev.data.split('-').reverse().join('/') : '';
+      return `
+        <div style="background: ${isFechamento ? '#fff1f2' : '#f8fafc'}; border: 1px solid ${isFechamento ? '#fecdd3' : '#e2e8f0'}; border-radius: 8px; padding: 12px 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: ${isFechamento ? '#be123c' : '#0284c7'};">
+              ${ev.categoria}
+            </span>
+            <span style="font-size: 11px; font-weight: 600; color: #475569;">📅 ${dt}</span>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3;">${ev.titulo}</div>
+          <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">${ev.descricao || ''}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // =========================================================================
+  // REGRAS SENAI: CHECKLIST DE PROFESSORES RESPONSÁVEIS E FECHAMENTO
+  // =========================================================================
+  renderizarChecklistFechamentoSintese(turmaId) {
+    if (!window.db) return;
+    const targetTurmaId = turmaId || (this.turmaAtiva ? this.turmaAtiva.id : 1);
+    const container = document.getElementById('sinteseChecklistDocentesContainer');
+    const badgeStatus = document.getElementById('sinteseStatusDiarioBadge');
+    const btnConcluir = document.getElementById('btnConcluirEtapaDocenteSintese');
+
+    const statusDiario = window.db.getStatusDiario(targetTurmaId);
+    if (badgeStatus) {
+      if (statusDiario === 'APROVADO') {
+        badgeStatus.textContent = 'Status: Fechamento Aprovado e Oficializado';
+        badgeStatus.style.background = '#dcfce7';
+        badgeStatus.style.color = '#15803d';
+      } else if (statusDiario === 'AGUARDANDO') {
+        badgeStatus.textContent = 'Status: Aguardando Autorização da Coordenação';
+        badgeStatus.style.background = '#fef3c7';
+        badgeStatus.style.color = '#b45309';
+      } else if (statusDiario === 'DEVOLVIDO') {
+        badgeStatus.textContent = 'Status: Devolvido para Ajustes Docentes';
+        badgeStatus.style.background = '#fee2e2';
+        badgeStatus.style.color = '#b91c1c';
+      } else {
+        badgeStatus.textContent = 'Status: Aberto para Lançamentos';
+        badgeStatus.style.background = '#e0f2fe';
+        badgeStatus.style.color = '#0369a1';
+      }
+    }
+
+    const profs = window.db.getProfessoresResponsaveis(targetTurmaId);
+    const user = window.auth.getUser() || {};
+    const meuRegistro = profs.find(p => p.id === user.id);
+
+    if (btnConcluir) {
+      if (statusDiario === 'APROVADO') {
+        btnConcluir.disabled = true;
+        btnConcluir.textContent = 'Diário Oficializado pela Coordenação';
+      } else if (meuRegistro && meuRegistro.fechado) {
+        btnConcluir.disabled = true;
+        btnConcluir.textContent = '✓ Minha Etapa Já Concluída';
+      } else {
+        btnConcluir.disabled = false;
+        btnConcluir.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Concluir e Fechar Minha Etapa (Professor Responsável)`;
+      }
+    }
+
+    if (container) {
+      container.innerHTML = `
+        <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">Checklist de Conclusão dos Professores Responsáveis:</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;">
+          ${profs.map(p => `
+            <div style="display: flex; justify-content: space-between; align-items: center; background: ${p.fechado ? '#f0fdf4' : '#fffbeb'}; border: 1px solid ${p.fechado ? '#bbf7d0' : '#fef3c7'}; border-radius: 8px; padding: 10px 14px;">
+              <div>
+                <strong style="font-size: 13px; color: #0f172a; display: block;">${p.nome}</strong>
+                <span style="font-size: 11px; color: #64748b;">${p.papel || 'Professor Responsável'}</span>
+              </div>
+              <span class="badge" style="background: ${p.fechado ? '#16a34a' : '#d97706'}; color: #ffffff; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600;">
+                ${p.fechado ? '✓ Concluído' : '⏳ Pendente'}
+              </span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+  }
+
+  concluirEtapaDocenteAtual() {
+    const turmaId = this.turmaAtiva ? this.turmaAtiva.id : 1;
+    const user = window.auth.getUser() || {};
+    const res = window.db.fecharEtapaDocente(turmaId, user.id);
+
+    if (!res.success) {
+      this.mostrarToast(res.msg, 'warning');
+      return;
+    }
+
+    this.mostrarToast(res.msg, res.todosFechados ? 'success' : 'info');
+    this.renderizarChecklistFechamentoSintese(turmaId);
+    this._atualizarStatusDiario(turmaId);
+  }
+
+  atualizarChecklistModalFechamento(turmaId) {
+    const container = document.getElementById('modalFechamentoChecklistContainer');
+    if (!container || !window.db) return;
+    const profs = window.db.getProfessoresResponsaveis(turmaId);
+
+    container.innerHTML = `
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; font-size: 12px;">
+        <strong style="color: #0f172a; display: block; margin-bottom: 6px;">Checklist dos Professores Responsáveis:</strong>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          ${profs.map(p => `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>${p.nome} <em style="color:#64748b;">(${p.papel || 'Docente'})</em></span>
+              <span class="badge ${p.fechado ? 'bg-success text-white' : 'bg-warning text-dark'}" style="font-size: 10px; padding: 2px 6px; border-radius: 4px;">
+                ${p.fechado ? '✓ Concluído' : '⏳ Pendente'}
+              </span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
   }
 
   // Utilitário: Resetar banco de dados para seed inicial (útil após mudanças de escala de notas)

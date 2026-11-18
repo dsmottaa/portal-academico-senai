@@ -173,7 +173,11 @@ const INITIAL_DB = {
       status: 'EM_ANDAMENTO',
       dataInicio: '2026-02-02',
       dataFim: '2026-06-30',
-      totalAlunos: 13
+      totalAlunos: 13,
+      professoresResponsaveis: [
+        { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Titular', fechado: false },
+        { id: 8, nome: 'Mariana Silva Rocha', papel: 'Professora Auxiliar', fechado: false }
+      ]
     },
     {
       id: 2,
@@ -192,7 +196,11 @@ const INITIAL_DB = {
       status: 'EM_ANDAMENTO',
       dataInicio: '2026-02-02',
       dataFim: '2026-06-30',
-      totalAlunos: 10
+      totalAlunos: 10,
+      professoresResponsaveis: [
+        { id: 8, nome: 'Mariana Silva Rocha', papel: 'Professora Titular', fechado: false },
+        { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Auxiliar', fechado: false }
+      ]
     },
     {
       id: 11,
@@ -211,7 +219,10 @@ const INITIAL_DB = {
       status: 'EM_ANDAMENTO',
       dataInicio: '2026-02-02',
       dataFim: '2026-06-30',
-      totalAlunos: 13
+      totalAlunos: 13,
+      professoresResponsaveis: [
+        { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Titular', fechado: false }
+      ]
     },
     {
       id: 12,
@@ -230,7 +241,11 @@ const INITIAL_DB = {
       status: 'EM_ANDAMENTO',
       dataInicio: '2026-02-02',
       dataFim: '2026-06-30',
-      totalAlunos: 10
+      totalAlunos: 10,
+      professoresResponsaveis: [
+        { id: 8, nome: 'Mariana Silva Rocha', papel: 'Professora Titular', fechado: false },
+        { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Auxiliar', fechado: false }
+      ]
     },
     {
       id: 9,
@@ -249,7 +264,10 @@ const INITIAL_DB = {
       status: 'EM_ANDAMENTO',
       dataInicio: '2026-02-02',
       dataFim: '2026-06-30',
-      totalAlunos: 14
+      totalAlunos: 14,
+      professoresResponsaveis: [
+        { id: 3, nome: 'Carlos Alberto Silva', papel: 'Professor Titular', fechado: false }
+      ]
     },
     {
       id: 10,
@@ -268,7 +286,10 @@ const INITIAL_DB = {
       status: 'EM_ANDAMENTO',
       dataInicio: '2026-02-03',
       dataFim: '2026-07-11',
-      totalAlunos: 18
+      totalAlunos: 18,
+      professoresResponsaveis: [
+        { id: 5, nome: 'Roberto Santos Lima', papel: 'Professor Titular', fechado: false }
+      ]
     },
     {
       id: 3,
@@ -1924,6 +1945,114 @@ const INITIAL_DB = {
       data: '28/10/2026',
       status: 'AGUARDANDO'
     }
+  ],
+
+  materiaisDidaticos: [
+    {
+      id: 1,
+      turmaId: 1,
+      titulo: 'Apostila Oficial - HTML5, CSS3 e Flexbox Moderno',
+      descricao: 'Guia completo de estilização, responsividade e layout flexível no padrão SENAI.',
+      tipo: 'PDF',
+      tamanho: '4.2 MB',
+      arquivoNome: 'apostila_frontend_senai_2026.pdf',
+      url: '#',
+      data: '15/02/2026',
+      docenteNome: 'Nathan Santana Matos'
+    },
+    {
+      id: 2,
+      turmaId: 1,
+      titulo: 'Repositório de Exemplos JavaScript ES6+',
+      descricao: 'Código fonte dos exemplos práticos desenvolvidos em sala e laboratório.',
+      tipo: 'Link',
+      tamanho: 'Web Link',
+      arquivoNome: 'https://github.com/senai-sp/frontend-exemplos',
+      url: 'https://github.com/senai-sp/frontend-exemplos',
+      data: '20/02/2026',
+      docenteNome: 'Nathan Santana Matos'
+    },
+    {
+      id: 3,
+      turmaId: 1,
+      titulo: 'Manual de Acessibilidade Web (WCAG 2.1)',
+      descricao: 'Diretrizes oficiais para conformidade de interfaces acessíveis no padrão SENAI.',
+      tipo: 'Apostila',
+      tamanho: '1.8 MB',
+      arquivoNome: 'manual_acessibilidade_senai.pdf',
+      url: '#',
+      data: '28/02/2026',
+      docenteNome: 'Mariana Silva Rocha'
+    },
+    {
+      id: 4,
+      turmaId: 2,
+      titulo: 'Modelagem Entidade-Relacionamento e Normalização 3FN',
+      descricao: 'Apostila conceitual de modelagem relacional, chaves primárias e relacionamentos.',
+      tipo: 'PDF',
+      tamanho: '3.1 MB',
+      arquivoNome: 'modelagem_banco_dados.pdf',
+      url: '#',
+      data: '12/02/2026',
+      docenteNome: 'Mariana Silva Rocha'
+    }
+  ],
+
+  calendarioOficial: [
+    {
+      id: 1,
+      data: '2026-02-02',
+      dataFim: '2026-02-02',
+      titulo: 'Início do 1º Semestre Letivo de 2026',
+      categoria: 'Dia Letivo',
+      descricao: 'Acolhimento de novos alunos e início das aulas técnicas e laboratoriais.',
+      destaque: false
+    },
+    {
+      id: 2,
+      data: '2026-02-16',
+      dataFim: '2026-02-18',
+      titulo: 'Recesso de Carnaval',
+      categoria: 'Feriado / Recesso',
+      descricao: 'Sem atividades pedagógicas presenciais ou remotas nas unidades escolares.',
+      destaque: false
+    },
+    {
+      id: 3,
+      data: '2026-04-13',
+      dataFim: '2026-04-17',
+      titulo: 'Semana de Avaliações Intermediárias',
+      categoria: 'Semana de Avaliações',
+      descricao: 'Aplicação das avaliações formativas e somativas do 1º bimestre letivo.',
+      destaque: false
+    },
+    {
+      id: 4,
+      data: '2026-04-24',
+      dataFim: '2026-04-24',
+      titulo: 'Prazo Limite: Fechamento de Notas do 1º Bimestre',
+      categoria: 'Prazo de Fechamento de Notas',
+      descricao: 'Prazo oficial para conclusão das etapas pelos docentes responsáveis e solicitação de autorização.',
+      destaque: true
+    },
+    {
+      id: 5,
+      data: '2026-06-15',
+      dataFim: '2026-06-19',
+      titulo: 'Semana de Avaliações Finais e Recuperação Paralela',
+      categoria: 'Semana de Avaliações',
+      descricao: 'Encerramento dos projetos interdisciplinares e avaliações recuperatórias.',
+      destaque: false
+    },
+    {
+      id: 6,
+      data: '2026-06-26',
+      dataFim: '2026-06-26',
+      titulo: 'Prazo Final: Fechamento Geral de Diários e Médias Semestrais',
+      categoria: 'Prazo de Fechamento de Notas',
+      descricao: 'Consolidação final de notas (0 a 100) e frequências para emissão dos boletins oficiais.',
+      destaque: true
+    }
   ]
 };
 
@@ -2046,6 +2175,47 @@ class RenovaDB {
             if (u.id === 2 && !u.emailAlternativo) u.emailAlternativo = 'coordenador@senai.br';
             if (u.id === 9 && !u.emailAlternativo) u.emailAlternativo = 'aluno@senai.br';
           });
+        }
+
+        // Migração: garante professoresResponsaveis nas turmas
+        if (this.data.turmas) {
+          this.data.turmas.forEach(t => {
+            if (!t.professoresResponsaveis || !Array.isArray(t.professoresResponsaveis) || t.professoresResponsaveis.length === 0) {
+              if (t.id === 1) {
+                t.professoresResponsaveis = [
+                  { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Titular', fechado: false },
+                  { id: 8, nome: 'Mariana Silva Rocha', papel: 'Professora Auxiliar', fechado: false }
+                ];
+              } else if (t.id === 2 || t.id === 12) {
+                t.professoresResponsaveis = [
+                  { id: 8, nome: 'Mariana Silva Rocha', papel: 'Professora Titular', fechado: false },
+                  { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Auxiliar', fechado: false }
+                ];
+              } else if (t.id === 9) {
+                t.professoresResponsaveis = [
+                  { id: 3, nome: 'Carlos Alberto Silva', papel: 'Professor Titular', fechado: false }
+                ];
+              } else if (t.id === 10) {
+                t.professoresResponsaveis = [
+                  { id: 5, nome: 'Roberto Santos Lima', papel: 'Professor Titular', fechado: false }
+                ];
+              } else {
+                t.professoresResponsaveis = [
+                  { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Titular', fechado: false }
+                ];
+              }
+            }
+          });
+        }
+
+        // Migração: garante materiaisDidaticos
+        if (!this.data.materiaisDidaticos || this.data.materiaisDidaticos.length === 0) {
+          this.data.materiaisDidaticos = JSON.parse(JSON.stringify(INITIAL_DB.materiaisDidaticos));
+        }
+
+        // Migração: garante calendarioOficial
+        if (!this.data.calendarioOficial || this.data.calendarioOficial.length === 0) {
+          this.data.calendarioOficial = JSON.parse(JSON.stringify(INITIAL_DB.calendarioOficial));
         }
       } catch (e) {
         console.error('Erro ao ler DB:', e);
@@ -2535,6 +2705,266 @@ class RenovaDB {
       .filter(s => s.turmaId === Number(turmaId) && s.status === 'DEVOLVIDO')
       .sort((a, b) => b.id - a.id);
     return sols.length ? (sols[0].motivoDevolucao || sols[0].observacao || '') : '';
+  }
+
+  // --- REGRAS SENAI: PROFESSORES RESPONSÁVEIS E ETAPA DOCENTE ---
+  getProfessoresResponsaveis(turmaId) {
+    const turma = (this.data.turmas || []).find(t => t.id === Number(turmaId));
+    if (!turma) return [];
+    if (!turma.professoresResponsaveis || !Array.isArray(turma.professoresResponsaveis)) {
+      turma.professoresResponsaveis = [
+        { id: 1, nome: 'Nathan Santana Matos', papel: 'Professor Titular', fechado: false }
+      ];
+      this.persist();
+    }
+    return turma.professoresResponsaveis;
+  }
+
+  fecharEtapaDocente(turmaId, docenteId, observacaoDocente = '') {
+    const turma = (this.data.turmas || []).find(t => t.id === Number(turmaId));
+    if (!turma) {
+      return { success: false, msg: 'Turma não encontrada no sistema.' };
+    }
+
+    // 1. Validação de notas (0 a 100)
+    const alunos = this.getAlunosPorTurma(turmaId, 'TODOS');
+    const ucId = turma.ucId || 1;
+    const avaliacoes = this.getAvaliacoesPorUC(turmaId, ucId);
+    let pendenciasNotas = 0;
+
+    if (avaliacoes.length > 0 && alunos.length > 0) {
+      alunos.forEach(al => {
+        avaliacoes.forEach(av => {
+          const nota = this.getNota(av.id, al.id);
+          if (nota === null || isNaN(nota) || nota === undefined) {
+            pendenciasNotas++;
+          }
+        });
+      });
+    }
+
+    if (pendenciasNotas > 0) {
+      return {
+        success: false,
+        pendenciasNotas,
+        msg: `Existem ${pendenciasNotas} nota(s) pendente(s) de lançamento. Preencha todas as notas de 0 a 100 antes de concluir sua etapa.`
+      };
+    }
+
+    // 2. Localiza o professor responsável
+    if (!turma.professoresResponsaveis || !Array.isArray(turma.professoresResponsaveis)) {
+      turma.professoresResponsaveis = [];
+    }
+
+    let doc = turma.professoresResponsaveis.find(p => p.id === Number(docenteId));
+    if (!doc) {
+      // Se não estiver na lista, adiciona como responsável
+      const user = (this.data.usuarios || []).find(u => u.id === Number(docenteId));
+      doc = {
+        id: Number(docenteId),
+        nome: user ? user.nome : 'Professor Responsável',
+        papel: 'Professor Responsável',
+        fechado: true,
+        dataFechamento: new Date().toLocaleDateString('pt-BR')
+      };
+      turma.professoresResponsaveis.push(doc);
+    } else {
+      doc.fechado = true;
+      doc.dataFechamento = new Date().toLocaleDateString('pt-BR');
+      doc.observacao = observacaoDocente || doc.observacao || '';
+    }
+
+    // 3. Verifica se todos os professores responsáveis concluíram a etapa
+    const todosFechados = turma.professoresResponsaveis.every(p => p.fechado === true);
+
+    if (todosFechados) {
+      // 100% dos professores fecharam -> Muda status da turma para Aguardando Autorização da Coordenação
+      if (!this.data.solicitacoesFechamento) this.data.solicitacoesFechamento = [];
+      const ids = this.data.solicitacoesFechamento.map(s => s.id);
+      const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
+      // Remove solicitações pendentes anteriores da mesma turma
+      this.data.solicitacoesFechamento = this.data.solicitacoesFechamento.filter(s => s.turmaId !== Number(turmaId) || s.status === 'APROVADO');
+      
+      this.data.solicitacoesFechamento.push({
+        id: newId,
+        turmaId: Number(turmaId),
+        docenteId: Number(docenteId),
+        observacao: observacaoDocente || 'Etapas de todos os professores responsáveis concluídas.',
+        data: new Date().toLocaleDateString('pt-BR'),
+        status: 'AGUARDANDO'
+      });
+
+      this.adicionarNotificacao(
+        'SOLICITACAO',
+        `Fechamento Aguardando Autorização • ${turma.codigo}`,
+        `100% dos professores responsáveis concluíram suas etapas. Diário aguardando autorização da coordenação pedagógica.`,
+        doc.nome || 'Docente'
+      );
+    } else {
+      this.adicionarNotificacao(
+        'INFO',
+        `Etapa Docente Concluída • ${turma.codigo}`,
+        `${doc.nome} concluiu sua etapa no diário da turma ${turma.codigo}. Aguardando demais professores responsáveis.`,
+        doc.nome || 'Docente'
+      );
+    }
+
+    this.persist();
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
+
+    return {
+      success: true,
+      todosFechados,
+      docenteNome: doc.nome,
+      msg: todosFechados
+        ? 'Etapa docente finalizada! Todos os professores responsáveis concluíram. Diário encaminhado para autorização da coordenação.'
+        : 'Sua etapa como professor responsável foi salva e concluída! Aguardando a finalização dos demais docentes da turma.'
+    };
+  }
+
+  reabrirEtapasDocentes(turmaId) {
+    const turma = (this.data.turmas || []).find(t => t.id === Number(turmaId));
+    if (turma && turma.professoresResponsaveis) {
+      turma.professoresResponsaveis.forEach(p => {
+        p.fechado = false;
+        p.dataFechamento = null;
+      });
+    }
+    this.persist();
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
+  }
+
+  // --- MATERIAIS DIDÁTICOS (PROFESSOR -> ALUNO) ---
+  getMateriais(turmaId = null) {
+    if (!this.data.materiaisDidaticos) {
+      this.data.materiaisDidaticos = JSON.parse(JSON.stringify(INITIAL_DB.materiaisDidaticos));
+      this.persist();
+    }
+    if (!turmaId) return this.data.materiaisDidaticos;
+    return this.data.materiaisDidaticos.filter(m => Number(m.turmaId) === Number(turmaId));
+  }
+
+  addMaterial(mat) {
+    if (!this.data.materiaisDidaticos) this.data.materiaisDidaticos = [];
+    const ids = this.data.materiaisDidaticos.map(m => m.id);
+    const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
+    const novo = {
+      id: newId,
+      turmaId: Number(mat.turmaId),
+      titulo: mat.titulo || 'Material Didático',
+      descricao: mat.descricao || '',
+      tipo: mat.tipo || 'PDF', // PDF | Apostila | Link
+      tamanho: mat.tamanho || 'Arquivo',
+      arquivoNome: mat.arquivoNome || 'documento.pdf',
+      url: mat.url || '#',
+      data: mat.data || new Date().toLocaleDateString('pt-BR'),
+      docenteNome: mat.docenteNome || 'Professor Responsável'
+    };
+
+    this.data.materiaisDidaticos.unshift(novo);
+    this.persist();
+
+    // Notificação institucional aos alunos
+    const turma = (this.data.turmas || []).find(t => t.id === novo.turmaId);
+    this.adicionarNotificacao(
+      'INFO',
+      `Novo Material Didático • ${turma ? turma.codigo : ''}`,
+      `Novo material publicado: "${novo.titulo}" (${novo.tipo}). Disponível para visualização e download.`,
+      novo.docenteNome
+    );
+
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
+    return novo;
+  }
+
+  excluirMaterial(id) {
+    if (!this.data.materiaisDidaticos) return;
+    this.data.materiaisDidaticos = this.data.materiaisDidaticos.filter(m => m.id !== Number(id));
+    this.persist();
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
+  }
+
+  // --- CALENDÁRIO OFICIAL DA COORDENAÇÃO ---
+  getEventosCalendario() {
+    if (!this.data.calendarioOficial) {
+      this.data.calendarioOficial = JSON.parse(JSON.stringify(INITIAL_DB.calendarioOficial));
+      this.persist();
+    }
+    return [...this.data.calendarioOficial].sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+  }
+
+  addEventoCalendario(ev) {
+    if (!this.data.calendarioOficial) this.data.calendarioOficial = [];
+    const ids = this.data.calendarioOficial.map(e => e.id);
+    const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
+    const novo = {
+      id: newId,
+      data: ev.data || new Date().toISOString().split('T')[0],
+      dataFim: ev.dataFim || ev.data || new Date().toISOString().split('T')[0],
+      titulo: ev.titulo || 'Evento Institucional',
+      categoria: ev.categoria || 'Dia Letivo',
+      descricao: ev.descricao || '',
+      destaque: ev.categoria === 'Prazo de Fechamento de Notas' || !!ev.destaque
+    };
+
+    this.data.calendarioOficial.push(novo);
+    this.persist();
+
+    // Notificação caso seja prazo de fechamento
+    if (novo.destaque || novo.categoria === 'Prazo de Fechamento de Notas') {
+      this.adicionarNotificacao(
+        'INFO',
+        `Calendário Oficial • Prazo de Fechamento`,
+        `Novo prazo oficial cadastrado pela Coordenação: "${novo.titulo}" para ${novo.data}.`,
+        'Coordenação Pedagógica'
+      );
+    }
+
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
+    return novo;
+  }
+
+  editarEventoCalendario(id, ev) {
+    if (!this.data.calendarioOficial) return null;
+    const item = this.data.calendarioOficial.find(e => e.id === Number(id));
+    if (!item) return null;
+
+    if (ev.data !== undefined) item.data = ev.data;
+    if (ev.dataFim !== undefined) item.dataFim = ev.dataFim;
+    if (ev.titulo !== undefined) item.titulo = ev.titulo;
+    if (ev.categoria !== undefined) {
+      item.categoria = ev.categoria;
+      item.destaque = ev.categoria === 'Prazo de Fechamento de Notas' || !!ev.destaque;
+    }
+    if (ev.descricao !== undefined) item.descricao = ev.descricao;
+
+    this.persist();
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
+    return item;
+  }
+
+  excluirEventoCalendario(id) {
+    if (!this.data.calendarioOficial) return;
+    this.data.calendarioOficial = this.data.calendarioOficial.filter(e => e.id !== Number(id));
+    this.persist();
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      window.dispatchEvent(new CustomEvent('renova:db-updated'));
+    }
   }
 
   // --- HELPER: ALUNO LOGADO ---
