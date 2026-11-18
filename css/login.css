@@ -1,0 +1,694 @@
+/* =============================================================================
+   PORTAL ACADÊMICO SENAI - TELA DE LOGIN OFICIAL (FIGMA DESIGN SYSTEM)
+   Identidade Visual: Vermelho SENAI (#C3161C), Azul Escuro (#0B192C / #1E293B),
+   Cinza Neutro Claro (#F8FAFC / #F1F5F9), Tipografia Montserrat.
+   ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --senai-red: #c3161c;
+  --senai-red-hover: #a50e14;
+  --senai-red-light: #fef2f2;
+  --senai-red-glow: rgba(195, 22, 28, 0.22);
+  --senai-blue-dark: #0b192c;
+  --senai-slate-900: #0f172a;
+  --senai-slate-800: #1e293b;
+  --senai-slate-600: #475569;
+  --senai-slate-500: #64748b;
+  --senai-slate-400: #94a3b8;
+  --senai-slate-200: #e2e8f0;
+  --senai-slate-100: #f1f5f9;
+  --senai-slate-50: #f8fafc;
+  --senai-white: #ffffff;
+  --senai-radius: 8px;
+  --senai-radius-lg: 12px;
+  --senai-font: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --senai-shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --senai-shadow-btn: 0 4px 14px rgba(195, 22, 28, 0.35);
+}
+
+/* --- Container Geral da Tela de Login (Split View) --- */
+.login-page-body {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: var(--senai-white);
+  overflow: hidden;
+  font-family: var(--senai-font);
+  color: var(--senai-slate-900);
+}
+
+.login-split-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* --- Coluna Esquerda: Fachada do SENAI (Foto Arquitetônica) --- */
+.login-cover-side {
+  flex: 1.1;
+  position: relative;
+  overflow: hidden;
+  background-color: #0b192c;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.login-cover-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: none !important;
+  transform: none !important;
+}
+
+.login-cover-side:hover .login-cover-image {
+  transform: none !important;
+}
+
+/* Gradiente sutil para garantir contraste e profundidade estética */
+.login-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 25, 44, 0.15) 0%,
+    rgba(11, 25, 44, 0.25) 50%,
+    rgba(11, 25, 44, 0.75) 100%
+  );
+  pointer-events: none;
+}
+
+/* Badge flutuante do SENAI no rodapé da imagem */
+.login-cover-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px;
+  color: var(--senai-white);
+}
+
+.login-cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.login-cover-badge-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--senai-red);
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff4b55;
+}
+
+.login-cover-title {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.login-cover-desc {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.9;
+  margin: 0;
+  max-width: 440px;
+  line-height: 1.5;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Coluna Direita: Formulário Limpo e Moderno --- */
+.login-form-side {
+  flex: 0.9;
+  min-width: 460px;
+  background-color: var(--senai-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 40px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header do formulário */
+.login-header {
+  margin-bottom: 32px;
+}
+
+.login-header-logo {
+  display: none; /* Visível principalmente no responsivo mobile */
+  margin-bottom: 24px;
+}
+
+.login-header-logo img {
+  height: 38px;
+  width: auto;
+}
+
+.login-header-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--senai-slate-900);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.login-header-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--senai-slate-500);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Grupos de Formulário */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.login-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  position: relative;
+}
+
+.login-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--senai-slate-800);
+  letter-spacing: 0.3px;
+}
+
+.login-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input {
+  width: 100%;
+  height: 48px;
+  background-color: var(--senai-white);
+  border: 1.5px solid var(--senai-slate-200);
+  border-radius: var(--senai-radius);
+  padding: 0 16px;
+  font-family: var(--senai-font);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--senai-slate-900);
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.login-input::placeholder {
+  color: var(--senai-slate-400);
+  font-weight: 400;
+}
+
+.login-input:hover {
+  border-color: #cbd5e1;
+}
+
+.login-input:focus {
+  border-color: var(--senai-red);
+  box-shadow: 0 0 0 3px var(--senai-red-glow);
+}
+
+.login-input.input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Botão de Alternar Visibilidade da Senha */
+.login-toggle-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--senai-slate-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s ease, background-color 0.18s ease;
+}
+
+.login-toggle-eye:hover {
+  color: var(--senai-slate-800);
+  background-color: var(--senai-slate-100);
+}
+
+.login-toggle-eye .eye-hide {
+  display: none;
+}
+
+.login-toggle-eye.active .eye-show {
+  display: none;
+}
+
+.login-toggle-eye.active .eye-hide {
+  display: block;
+}
+
+/* Indicador de Caps Lock */
+.caps-indicator {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #d97706;
+  margin-top: 4px;
+}
+
+.caps-indicator.visible {
+  display: flex;
+}
+
+/* Linha de Opções: Lembrar de mim + Esqueceu a Senha */
+.login-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
+/* Checkbox Customizado */
+.login-remember-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--senai-slate-600);
+  cursor: pointer;
+  user-select: none;
+}
+
+.login-remember-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--senai-slate-300, #cbd5e1);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition: all 0.18s ease;
+  background-color: var(--senai-white);
+  margin: 0;
+}
+
+.login-remember-checkbox:checked {
+  background-color: var(--senai-red);
+  border-color: var(--senai-red);
+}
+
+.login-remember-checkbox:checked::before {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.login-remember-checkbox:focus-visible {
+  box-shadow: 0 0 0 3px var(--senai-red-glow);
+}
+
+/* Link Esqueceu a Senha */
+.login-forgot-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--senai-slate-500);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.login-forgot-link:hover {
+  color: var(--senai-red);
+  text-decoration: underline;
+}
+
+/* Botão Vermelho Oficial ENTRAR */
+.btn-senai-submit {
+  width: 100%;
+  height: 48px;
+  background-color: var(--senai-red);
+  color: var(--senai-white);
+  border: none;
+  border-radius: var(--senai-radius);
+  font-family: var(--senai-font);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--senai-shadow-btn);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-senai-submit:hover {
+  background-color: var(--senai-red-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(195, 22, 28, 0.45);
+}
+
+.btn-senai-submit:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(195, 22, 28, 0.35);
+}
+
+/* --- Seção de Acesso Rápido Demo (Discreta no Rodapé) --- */
+.login-demo-section {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--senai-slate-200);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-demo-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--senai-slate-400);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.login-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.login-demo-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--senai-slate-50);
+  border: 1px solid var(--senai-slate-200);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--senai-slate-700);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.login-demo-chip:hover {
+  background-color: var(--senai-white);
+  border-color: var(--senai-slate-400);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.login-demo-chip-icon {
+  font-size: 14px;
+}
+
+.login-demo-chip-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.login-demo-chip-role {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--senai-slate-400);
+}
+
+/* --- Modal Esqueceu a Senha --- */
+.login-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+.login-modal-backdrop.open,
+.login-modal-backdrop.modal-active {
+  display: flex;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.login-modal-card {
+  background-color: var(--senai-white);
+  border-radius: var(--senai-radius-lg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 440px;
+  padding: 32px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--senai-slate-400);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.18s ease;
+}
+
+.login-modal-close:hover {
+  color: var(--senai-slate-800);
+}
+
+.login-modal-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.login-modal-icon {
+  width: 52px;
+  height: 52px;
+  background-color: var(--senai-red-light);
+  color: var(--senai-red);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.login-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--senai-slate-900);
+  margin: 0 0 8px 0;
+}
+
+.login-modal-desc {
+  font-size: 13.5px;
+  color: var(--senai-slate-500);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.login-modal-feedback {
+  text-align: center;
+  padding: 16px 0;
+}
+
+.login-modal-feedback.hidden {
+  display: none;
+}
+
+.login-feedback-icon {
+  width: 56px;
+  height: 56px;
+  background-color: #ecfdf5;
+  color: #10b981;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.login-feedback-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--senai-slate-900);
+  margin: 0 0 8px 0;
+}
+
+.login-feedback-text {
+  font-size: 13.5px;
+  color: var(--senai-slate-500);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.btn-modal-subtle {
+  background-color: var(--senai-slate-100);
+  color: var(--senai-slate-700);
+  border: 1px solid var(--senai-slate-200);
+  border-radius: var(--senai-radius);
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-modal-subtle:hover {
+  background-color: var(--senai-slate-200);
+  color: var(--senai-slate-900);
+}
+
+/* --- Responsividade & Breakpoints --- */
+
+/* Tablets em modo retrato ou telas intermediárias (max-width: 991px) */
+@media (max-width: 991px) {
+  .login-split-container {
+    flex-direction: column;
+  }
+
+  .login-cover-side {
+    flex: none;
+    height: 220px;
+  }
+
+  .login-cover-content {
+    padding: 24px;
+  }
+
+  .login-cover-title {
+    font-size: 20px;
+  }
+
+  .login-cover-desc {
+    display: none;
+  }
+
+  .login-form-side {
+    flex: 1;
+    min-width: 100%;
+    padding: 32px 24px;
+    justify-content: flex-start;
+  }
+
+  .login-header-logo {
+    display: block;
+  }
+}
+
+/* Telas de Celular (max-width: 600px) */
+@media (max-width: 600px) {
+  .login-cover-side {
+    height: 160px;
+  }
+
+  .login-cover-content {
+    padding: 16px;
+  }
+
+  .login-cover-title {
+    font-size: 18px;
+  }
+
+  .login-cover-badge {
+    font-size: 10.5px;
+    padding: 4px 10px;
+    margin-bottom: 6px;
+  }
+
+  .login-form-side {
+    padding: 24px 20px;
+  }
+
+  .login-header-title {
+    font-size: 26px;
+  }
+
+  .login-header-subtitle {
+    font-size: 13px;
+  }
+
+  .login-demo-grid {
+    grid-template-columns: 1fr;
+  }
+}
