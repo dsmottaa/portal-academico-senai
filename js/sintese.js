@@ -20,7 +20,46 @@ class SinteseController {
       this.turmaId = window.app.turmaAtiva.id || 1;
       this.ucId = window.app.turmaAtiva.ucId || 1;
     }
+    this.popularSelectTurma();
     this.alternarAba(this.abaAtiva);
+  }
+
+  popularSelectTurma() {
+    const sel = document.getElementById('selectSinteseTurma');
+    if (!sel || !window.db) return;
+
+    const turmas = (window.db.getTurmas && window.db.getTurmas('EM_ANDAMENTO')) || (window.db.data && window.db.data.turmas) || [];
+    if (turmas.length === 0) return;
+
+    sel.innerHTML = turmas.map(t =>
+      `<option value="${t.id}" ${Number(t.id) === Number(this.turmaId) ? 'selected' : ''}>${t.codigo} — ${t.nome || t.ucNome || ''}</option>`
+    ).join('');
+
+    this.atualizarHeaderTurma();
+  }
+
+  onTurmaChange(turmaId) {
+    this.turmaId = Number(turmaId);
+    if (window.app && window.db && window.db.data) {
+      window.app.turmaAtiva = (window.db.data.turmas || []).find(t => Number(t.id) === this.turmaId);
+      if (window.app.turmaAtiva) {
+        this.ucId = window.app.turmaAtiva.ucId || 1;
+      }
+    }
+    this.atualizarHeaderTurma();
+    this.renderizarSintese();
+    if (window.app && typeof window.app.renderizarChecklistFechamentoSintese === 'function') {
+      window.app.renderizarChecklistFechamentoSintese();
+    }
+  }
+
+  atualizarHeaderTurma() {
+    const headerInfo = document.getElementById('sinteseTurmaHeaderInfo');
+    if (!headerInfo || !window.db) return;
+    const turma = (window.db.data.turmas || []).find(t => Number(t.id) === Number(this.turmaId));
+    if (turma) {
+      headerInfo.innerHTML = `Curso: <strong>${turma.nome || turma.ucNome || 'Técnico SENAI'}</strong>`;
+    }
   }
 
   alternarAba(aba) {

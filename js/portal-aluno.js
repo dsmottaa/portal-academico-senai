@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RENOVA SENAI - Portal do Aluno Controller (js/portal-aluno.js)
  * 100% Integrado ao window.db (Zero Mocks Estáticos)
  * Comunicação bidirecional com Portal do Orientador e Diário Docente
@@ -73,19 +73,19 @@ class PortalAlunoController {
           </button>
         </div>
 
-        <!-- Mini KPIs -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:20px;">
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">
+                <!-- Indicadores Diretos Consolidados -->
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:18px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
             <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Atestados Homologados</div>
-            <div style="font-size:20px; font-weight:800; color:#16a34a; margin-top:2px;">${atestadosAbonados} <span style="font-size:12px; font-weight:500; color:#64748b;">(Faltas abonadas)</span></div>
+            <div style="font-size:20px; font-weight:800; color:#16a34a; margin-top:2px;">${atestadosAbonados}</div>
           </div>
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">
-            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Em Análise na Orientação</div>
-            <div style="font-size:20px; font-weight:800; color:#f59e0b; margin-top:2px;">${atestadosPendentes} <span style="font-size:12px; font-weight:500; color:#64748b;">(Pendentes)</span></div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Em Análise</div>
+            <div style="font-size:20px; font-weight:800; color:#f59e0b; margin-top:2px;">${atestadosPendentes}</div>
           </div>
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">
-            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Compensações Agendadas</div>
-            <div style="font-size:20px; font-weight:800; color:#0284c7; margin-top:2px;">${compAgendadas} <span style="font-size:12px; font-weight:500; color:#64748b;">(A cumprir)</span></div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Compensações Pendentes</div>
+            <div style="font-size:20px; font-weight:800; color:#0284c7; margin-top:2px;">${compAgendadas}</div>
           </div>
         </div>
 
@@ -106,13 +106,13 @@ class PortalAlunoController {
             ` : `
               <div style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; padding-right:4px;">
                 ${justificativas.map(j => {
-                  let badge = `<span style="background:#fef3c7; color:#92400e; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">⏳ Em Análise</span>`;
+                  let badge = `<span style="background:#fef3c7; color:#92400e; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">Em Análise</span>`;
                   if (j.status === 'ABONADA' || j.status === 'DEFERIDO') {
-                    badge = `<span style="background:#dcfce7; color:#166534; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">✓ Abonada (Dispensa D)</span>`;
+                    badge = `<span style="background:#dcfce7; color:#166534; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">Abonada (Dispensa D)</span>`;
                   } else if (j.status === 'A_COMPENSAR') {
-                    badge = `<span style="background:#e0f2fe; color:#0369a1; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">⚖️ A Compensar</span>`;
+                    badge = `<span style="background:#e0f2fe; color:#0369a1; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">A Compensar</span>`;
                   } else if (j.status === 'INJUSTIFICADA' || j.status === 'INDEFERIDO') {
-                    badge = `<span style="background:#fee2e2; color:#991b1b; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">✕ Injustificada</span>`;
+                    badge = `<span style="background:#fee2e2; color:#991b1b; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:9999px;">Injustificada</span>`;
                   }
 
                   const periodoStr = j.dataInicio === j.dataFim ? j.dataInicio : `${j.dataInicio} a ${j.dataFim}`;
@@ -124,7 +124,7 @@ class PortalAlunoController {
                         ${badge}
                       </div>
                       <div style="color:#475569; margin-bottom:4px;"><strong>Motivo:</strong> ${j.motivo || 'Motivo de saúde'}</div>
-                      ${j.anexo ? `<div style="color:#64748b; font-size:11px; margin-bottom:4px;">📎 Comprovante: ${j.anexo}</div>` : ''}
+                      ${j.anexo ? `<div style="color:#64748b; font-size:11px; margin-bottom:4px;">Documento: ${j.anexo}</div>` : ''}
                       ${j.parecer ? `<div style="background:#f1f5f9; border-radius:6px; padding:6px 8px; font-size:11px; color:#334155; margin-top:4px;"><strong>Parecer da Orientação:</strong> ${j.parecer}</div>` : ''}
                     </div>
                   `;
@@ -238,7 +238,7 @@ class PortalAlunoController {
       dataInicio: dataInicio,
       dataFim: dataFimFinal,
       motivo: motivo,
-      anexo: descricao ? `Comprovante: ${descricao}` : 'Documento anexado pelo aluno',
+      anexo: descricao ? `Documento: ${descricao}` : 'Documento anexado pelo aluno',
       status: 'PENDENTE',
       criadoEm: new Date().toISOString()
     };
@@ -250,7 +250,7 @@ class PortalAlunoController {
     this.fecharModalSolicitarJustificativa();
 
     if (window.app) {
-      window.app.mostrarToast('Comprovante de ausência enviado à Orientação Educacional com sucesso!', 'success');
+      window.app.mostrarToast('Justificativa de ausência enviada à Orientação Educacional com sucesso!', 'success');
     }
 
     this.renderizarSecaoOrientacao();

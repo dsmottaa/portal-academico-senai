@@ -296,6 +296,7 @@ class DiarioController {
           subturma: this.subturma,
           quantidadeAulas: this.quantidadeAulas,
           conteudo: conteudo,
+          anexoPdf: this.anexoPdfAtual || null,
           frequencias: this.frequencias
         });
       }
@@ -376,11 +377,49 @@ class DiarioController {
     }
   }
 
+  onArquivoPdfSelecionado(input) {
+    const file = input.files && input.files[0];
+    const spanNome = document.getElementById('nomePdfAnexado');
+    if (!file) {
+      this.anexoPdfAtual = null;
+      if (spanNome) spanNome.textContent = 'Nenhum arquivo anexado';
+      return;
+    }
+    if (file.type !== 'application/pdf') {
+      window.app.mostrarToast('Por favor, selecione apenas arquivos em formato PDF.', 'warning');
+      input.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.anexoPdfAtual = {
+        nome: file.name,
+        tamanho: `${(file.size / 1024).toFixed(1)} KB`,
+        dataUrl: e.target.result
+      };
+      if (spanNome) {
+        spanNome.textContent = `PDF anexado: ${file.name} (${this.anexoPdfAtual.tamanho})`;
+        spanNome.style.color = '#15803d';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   abrirModalHistoricoConteudo() {
-    window.app.mostrarAlertaModal(
-      'Histórico de Conteúdos Ministrados',
-      '• 04/03/2026: Estruturação avançada de componentes e eventos de interface.\n• 02/03/2026: Apresentação da UC e configuração do ambiente VS Code.\n• 25/02/2026: Fundamentos da arquitetura Web Client-Server e HTTP.\n• 23/02/2026: Introdução aos padrões de acessibilidade e WCAG.'
-    );
+    const aulas = (window.db && window.db.data.aulas) || [];
+    const aulasTurma = aulas.filter(a => Number(a.turmaId) === Number(this.turmaId));
+    
+    let mensagem = '';
+    if (aulasTurma.length > 0) {
+      mensagem = aulasTurma.map(a => {
+        const anexoTxt = a.anexoPdf ? ` [PDF: ${a.anexoPdf.nome}]` : '';
+        return `• ${a.data}: ${a.conteudo || 'Sem descrição'}${anexoTxt}`;
+      }).join('\n');
+    } else {
+      mensagem = '• 04/03/2026: Estruturação avançada de componentes e eventos de interface.\n• 02/03/2026: Apresentação da UC e configuração do ambiente VS Code.\n• 25/02/2026: Fundamentos da arquitetura Web Client-Server e HTTP.\n• 23/02/2026: Introdução aos padrões de acessibilidade e WCAG.';
+    }
+
+    window.app.mostrarAlertaModal('Histórico de Conteúdos Ministrados', mensagem);
   }
 
   limparConteudo() {
@@ -389,6 +428,14 @@ class DiarioController {
       textarea.value = '';
       this.atualizarContadorConteudo(textarea);
     }
+    const inputPdf = document.getElementById('inputPdfConteudoMinistrado');
+    if (inputPdf) inputPdf.value = '';
+    const spanNome = document.getElementById('nomePdfAnexado');
+    if (spanNome) {
+      spanNome.textContent = 'Nenhum arquivo anexado';
+      spanNome.style.color = '#64748b';
+    }
+    this.anexoPdfAtual = null;
     window.app.mostrarToast('Campo de conteúdo limpo.', 'info');
   }
 

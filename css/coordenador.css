@@ -1,4 +1,4 @@
-/**
+﻿/**
  * =============================================================================
  * RENOVA SENAI — ESTILOS DO PORTAL DO COORDENADOR (coordenador.css)
  * Design SENAI Red + Dark Industrial
@@ -27,7 +27,7 @@
 }
 
 .role-badge-coordenador {
-  background: linear-gradient(135deg, #c3161c, #9b111c);
+  background: linear-gradient(135deg, #0284c7, #0369a1);
   color: white;
 }
 
@@ -74,9 +74,9 @@
 }
 
 .role-toggle-btn.active {
-  background: #c3161c;
+  background: #0284c7;
   color: white;
-  box-shadow: 0 3px 12px rgba(195,22,28,0.5);
+  box-shadow: 0 3px 12px rgba(2, 132, 199, 0.5);
 }
 
 .role-toggle-btn svg {
@@ -89,7 +89,7 @@
 
 .coord-portal-header {
   background: linear-gradient(135deg, #1a0a0b 0%, #2d1215 50%, #1a0a0b 100%);
-  border-bottom: 2px solid #c3161c;
+  border-bottom: 2px solid #0284c7;
   padding: 20px 24px;
   display: flex;
   align-items: center;
@@ -110,8 +110,8 @@
     45deg,
     transparent,
     transparent 20px,
-    rgba(195,22,28,0.03) 20px,
-    rgba(195,22,28,0.03) 21px
+    rgba(2, 132, 199, 0.03) 20px,
+    rgba(2, 132, 199, 0.03) 21px
   );
 }
 
@@ -166,9 +166,9 @@
 }
 
 .coord-kpi-card:hover {
-  border-color: var(--senai-red);
+  border-color: #0284c7;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(195,22,28,0.12);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.12);
 }
 
 .coord-kpi-card.kpi-alert {
@@ -188,7 +188,7 @@
 
 .kpi-icon svg { width: 20px; height: 20px; }
 
-.kpi-icon-turmas { background: rgba(195,22,28,0.15); color: #c3161c; }
+.kpi-icon-turmas { background: rgba(2, 132, 199, 0.15); color: #0284c7; }
 .kpi-icon-alunos { background: rgba(59,130,246,0.15); color: #3b82f6; }
 .kpi-icon-concluidas { background: rgba(16,185,129,0.15); color: #10b981; }
 .kpi-icon-fechamento { background: rgba(245,158,11,0.15); color: #f59e0b; }
@@ -240,7 +240,7 @@
 }
 
 .coord-tab-btn:hover { color: var(--text-main); background: var(--bg-card-subtle); }
-.coord-tab-btn.active { color: #c3161c; border-bottom-color: #c3161c; }
+.coord-tab-btn.active { color: #0284c7; border-bottom-color: #0284c7; }
 
 .coord-tab-panel { display: none; }
 .coord-tab-panel.active { display: block; }
@@ -424,8 +424,8 @@
 /* ─── BANNER "SOLICITAR FECHAMENTO" (visível para docente) ─────────────────── */
 
 .coord-docente-fechamento-banner {
-  background: linear-gradient(135deg, rgba(195,22,28,0.08), rgba(195,22,28,0.03));
-  border: 1px solid rgba(195,22,28,0.2);
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(2, 132, 199, 0.03));
+  border: 1px solid rgba(2, 132, 199, 0.2);
   border-radius: 12px;
   padding: 18px 20px;
   display: flex;
@@ -462,7 +462,7 @@
   font-size: 7px;
   font-weight: 900;
   letter-spacing: 0.5px;
-  background: #c3161c;
+  background: #0284c7;
   color: white;
   padding: 1px 4px;
   border-radius: 3px;
@@ -562,15 +562,15 @@
 }
 
 .coord-course-pill:hover {
-  border-color: rgba(195, 22, 28, 0.4);
+  border-color: rgba(2, 132, 199, 0.4);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .coord-course-pill.active {
-  border-color: #c3161c;
-  background: linear-gradient(135deg, rgba(195, 22, 28, 0.08), rgba(195, 22, 28, 0.02));
-  box-shadow: 0 4px 16px rgba(195, 22, 28, 0.15);
+  border-color: #0284c7;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(2, 132, 199, 0.02));
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.15);
 }
 
 .coord-course-pill.active::before {
@@ -580,14 +580,14 @@
   left: 0;
   bottom: 0;
   width: 4px;
-  background: #c3161c;
+  background: #0284c7;
 }
 
 .coord-course-pill .pill-code {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.5px;
-  color: #c3161c;
+  color: #0284c7;
   margin-bottom: 4px;
 }
 
@@ -617,8 +617,8 @@
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #c3161c;
-  background: rgba(195, 22, 28, 0.1);
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
   margin-bottom: 6px;
@@ -678,7 +678,7 @@
   letter-spacing: 0.5px;
   padding: 3px 8px;
   border-radius: 12px;
-  background: #c3161c;
+  background: #0284c7;
   color: white;
 }
 
@@ -729,8 +729,8 @@
 }
 
 .coord-uc-turmas-title .count-pill {
-  background: rgba(195, 22, 28, 0.1);
-  color: #c3161c;
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284c7;
   padding: 1px 7px;
   border-radius: 10px;
   font-size: 11px;
@@ -755,7 +755,7 @@
 }
 
 .coord-turma-card:hover {
-  border-color: rgba(195, 22, 28, 0.3);
+  border-color: rgba(2, 132, 199, 0.3);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
@@ -956,4 +956,36 @@
   .coord-fechamento-card {
     padding: 14px;
   }
+}
+
+
+/* =============================================================================
+ * TEMA OFICIAL DA COORDENAÇÃO — AZUL PETRÓLEO (#0284C7)
+ * ============================================================================= */
+#tabSection_coordenador {
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --senai-red: #0284c7;
+}
+
+#tabSection_coordenador .btn-primary {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+#tabSection_coordenador .btn-primary:hover {
+  background: #0369a1 !important;
+  border-color: #0369a1 !important;
+}
+
+#tabSection_coordenador .coord-tab-btn.active {
+  color: #0284c7 !important;
+  border-bottom-color: #0284c7 !important;
+}
+
+#sidebarCoordSection .nav-item.active {
+  background: rgba(2, 132, 199, 0.15) !important;
+  color: #38bdf8 !important;
+  border-left-color: #0284c7 !important;
 }

@@ -1800,20 +1800,20 @@ class AppController {
       const itemAluno = (sintese.alunos || []).find(it => it.aluno && it.aluno.id === aluno.id);
       const freqCalculada = itemAluno ? parseFloat(itemAluno.freqPorcentagem || 100) : 100;
 
-      let badgeClass = 'aprovado';
-      let badgeLabel = 'Aprovado';
+      let badgeClass = 'registrado';
+      let badgeLabel = 'Regular';
       if (Number(mediaCalculada) < 70.0 && freqCalculada < 75.0) {
-        badgeClass = 'reprovado';
-        badgeLabel = 'Reprovado por Nota e Falta';
+        badgeClass = 'em-andamento';
+        badgeLabel = 'Atenção (Nota e Falta)';
       } else if (freqCalculada < 75.0) {
-        badgeClass = 'reprovado';
-        badgeLabel = 'Reprovado por Falta';
+        badgeClass = 'em-andamento';
+        badgeLabel = 'Atenção em Frequência';
       } else if (Number(mediaCalculada) < 70.0) {
-        badgeClass = 'reprovado';
-        badgeLabel = 'Reprovado por Nota';
+        badgeClass = 'em-andamento';
+        badgeLabel = 'Em Recuperação';
       } else {
-        badgeClass = 'aprovado';
-        badgeLabel = 'Aprovado';
+        badgeClass = 'registrado';
+        badgeLabel = 'Adequado';
       }
 
       const avaliacoesHtml = avaliacoes.length > 0
@@ -2566,10 +2566,10 @@ class AppController {
   // =========================================================================
   renderizarCalendario(categoriaFiltro = 'TODOS') {
     if (!window.db) return;
-    const isCoordOrOrient = window.auth && (window.auth.isCoordenacao() || window.auth.isOrientador());
+    const isCoord = window.auth && window.auth.isCoordenacao && window.auth.isCoordenacao();
     const boxAcoes = document.getElementById('calendarioAcoesCoord');
     if (boxAcoes) {
-      boxAcoes.style.display = isCoordOrOrient ? 'flex' : 'none';
+      boxAcoes.style.display = isCoord ? 'flex' : 'none';
     }
 
     let eventos = window.db.getEventosCalendario() || [];
@@ -2614,27 +2614,27 @@ class AppController {
       const dataLabel = dtFim ? `${dtIni} até ${dtFim}` : dtIni;
 
       return `
-        <div class="sintese-table-card" style="padding: 20px; border: 1.5px solid ${cardBorder}; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="sintese-table-card" style="padding: 16px 20px; border: 1px solid ${cardBorder}; border-radius: 10px; background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 8px;">
-              <span class="badge" style="background: ${badgeBg}; color: ${badgeColor}; font-weight: 700; font-size: 11px; padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
-                ${isFechamento ? '⚠️ ' : ''}${ev.categoria}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px;">
+              <span class="badge" style="background: ${badgeBg}; color: ${badgeColor}; font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 4px;">
+                ${ev.categoria}
               </span>
-              <span style="font-size: 12px; font-weight: 700; color: #0f172a; background: #f8fafc; padding: 4px 8px; border-radius: 6px; border: 1px solid #f1f5f9;">
-                📅 ${dataLabel}
+              <span style="font-size: 11.5px; font-weight: 600; color: #475569; background: #f8fafc; padding: 2px 7px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                ${dataLabel}
               </span>
             </div>
 
-            <h4 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; line-height: 1.35;">${ev.titulo}</h4>
-            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 14px 0; line-height: 1.45;">${ev.descricao || 'Data oficial do calendário acadêmico SENAI-SP.'}</p>
+            <h4 style="font-size: 14.5px; font-weight: 700; color: #0f172a; margin: 0 0 6px 0; line-height: 1.3;">${ev.titulo}</h4>
+            <p style="font-size: 12px; color: #64748b; margin: 0 0 10px 0; line-height: 1.4;">${ev.descricao || 'Data oficial do calendário acadêmico SENAI-SP.'}</p>
           </div>
 
-          ${isCoordOrOrient ? `
-            <div style="display: flex; gap: 8px; justify-content: flex-end; padding-top: 10px; border-top: 1px solid #f1f5f9;">
-              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.abrirModalEditarEventoCalendario(${ev.id})" style="font-size: 11.5px; padding: 4px 10px;">
+          ${isCoord ? `
+            <div style="display: flex; gap: 8px; justify-content: flex-end; padding-top: 8px; border-top: 1px solid #f1f5f9;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.abrirModalEditarEventoCalendario(${ev.id})" style="font-size: 11px; padding: 3px 8px;">
                 Editar
               </button>
-              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.excluirEventoCalendario(${ev.id})" style="font-size: 11.5px; padding: 4px 10px; color: #ef4444; border-color: #fecaca;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.app.excluirEventoCalendario(${ev.id})" style="font-size: 11px; padding: 3px 8px; color: #ef4444; border-color: #fecaca;">
                 Excluir
               </button>
             </div>

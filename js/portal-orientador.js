@@ -8,13 +8,8 @@
 
 class PortalOrientadorController {
   constructor() {
-    this.currentSubTab = 'radar'; // radar | calendario | atestados | compensacoes | prontuario
+    this.currentSubTab = 'radar'; // radar | atestados | compensacoes | prontuario
     this.turmaId = 1;
-    this.calYear = 2026;
-    this.calMonth = 10; // Novembro (0-indexed: 10 = Nov)
-    this.calView = 'mensal'; // mensal | semanal
-    this.calFiltroTipo = 'TODOS';
-    this.selectedDay = new Date().toISOString().split('T')[0];
     this.alunoProntuarioAtivo = null;
     this._boundEvents = false;
   }
@@ -83,8 +78,10 @@ class PortalOrientadorController {
   }
 
   navegarAba(aba) {
+    // Calendário removido do Orientador — redireciona para radar
+    if (aba === 'calendario') aba = 'radar';
     this.currentSubTab = aba || 'radar';
-    const subviews = ['radar', 'calendario', 'atestados', 'compensacoes', 'prontuario'];
+    const subviews = ['radar', 'atestados', 'compensacoes', 'prontuario'];
 
     // Atualiza botões da barra lateral do Orientador
     document.querySelectorAll('#sidebarOrientSection .nav-item, #sidebarModeOrientador .nav-item, .orientador-sidebar .nav-item').forEach(btn => {
@@ -126,9 +123,6 @@ class PortalOrientadorController {
     switch (this.currentSubTab) {
       case 'radar':
         this.renderRadar();
-        break;
-      case 'calendario':
-        this.renderCalendario();
         break;
       case 'atestados':
         this.renderAtestados();
@@ -174,9 +168,9 @@ class PortalOrientadorController {
     if (radarData.filaUrgencia.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="5" style="text-align:center; padding:36px; color:#16a34a; font-size:14px;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px; display:inline-block;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <div style="font-weight:700;">Tudo sob controle! Nenhum aluno em situação de risco ou pendência urgente hoje.</div>
+          <td colspan="6" style="text-align:center; padding:36px; color:#16a34a; font-size:14px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:8px; display:inline-block; vertical-align:middle;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <strong style="display:block; margin-top:4px;">Nenhum caso prioritário hoje.</strong>
             <span style="font-size:12px; color:#64748b;">Todas as faltas estão justificadas e compensações em dia.</span>
           </td>
         </tr>
@@ -186,68 +180,65 @@ class PortalOrientadorController {
 
     tbody.innerHTML = radarData.filaUrgencia.map(item => {
       const al = item.aluno;
-      const avatarSrc = al.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(al.nome)}&background=0284c7&color=fff`;
       const freqPct = item.hist ? item.hist.freqPorcentagem : 100;
       let freqColor = '#16a34a';
       if (freqPct < 75) freqColor = '#be123c';
       else if (freqPct < 85) freqColor = '#d97706';
 
-      const contatoBadge = item.contatoHoje
-        ? `<span class="radar-badge-contato feito" title="Contato realizado via ${item.contatoHoje.canal} hoje às ${item.contatoHoje.hora}">✓ Contato feito (${item.contatoHoje.canal})</span>`
-        : `<span class="radar-badge-contato pendente" title="Nenhum contato registrado hoje">⚠️ Sem contato hoje</span>`;
+      let gravidade = 'Ausência';
+      let gravidadeColor = '#475569';
+      let gravidadeBg = '#f1f5f9';
+      if (item.tipoUrgencia === 'ATESTADO_PENDENTE') { gravidade = 'Atestado Pendente'; gravidadeColor = '#92400e'; gravidadeBg = '#fef3c7'; }
+      else if (item.tipoUrgencia === 'FALTAS_CRITICAS') { gravidade = 'Faltas Críticas'; gravidadeColor = '#991b1b'; gravidadeBg = '#fee2e2'; }
+      else if (item.tipoUrgencia === 'ATRASOS_ACUMULADOS') { gravidade = '5+ Atrasos'; gravidadeColor = '#9a3412'; gravidadeBg = '#ffedd5'; }
 
-      let urgenciaBadge = '';
-      if (item.tipoUrgencia === 'ATESTADO_PENDENTE') {
-        urgenciaBadge = `<span class="badge" style="background:#fef3c7; color:#92400e; font-weight:700; font-size:11px; padding:4px 8px; border-radius:6px;">📝 Atestado a Validar</span>`;
-      } else if (item.tipoUrgencia === 'FALTAS_CRITICAS') {
-        urgenciaBadge = `<span class="badge" style="background:#fee2e2; color:#991b1b; font-weight:700; font-size:11px; padding:4px 8px; border-radius:6px;">🚨 Faltas Críticas (&lt;75%)</span>`;
-      } else if (item.tipoUrgencia === 'ATRASOS_ACUMULADOS') {
-        urgenciaBadge = `<span class="badge" style="background:#ffedd5; color:#9a3412; font-weight:700; font-size:11px; padding:4px 8px; border-radius:6px;">⏱️ 5+ Atrasos</span>`;
-      } else {
-        urgenciaBadge = `<span class="badge" style="background:#f1f5f9; color:#475569; font-weight:600; font-size:11px; padding:4px 8px; border-radius:6px;">⚠️ Ausência</span>`;
-      }
+      const contatoHojeFeito = !!item.contatoHoje;
+      const statusContato = contatoHojeFeito
+        ? `<span class="radar-badge-contato feito" style="font-size:11px;">Contato feito (${item.contatoHoje.canal})</span>`
+        : `<span class="radar-badge-contato pendente" style="font-size:11px;">Sem contato hoje</span>`;
+
+      const telefone = al.telefone || al.celular || '(11) 9xxxx-xxxx';
+      const email = al.email || `${al.nome.split(' ')[0].toLowerCase()}@aluno.senai.br`;
+      const whatsappLink = `https://wa.me/55${telefone.replace(/\D/g,'')}`;
 
       return `
         <tr>
           <td>
-            <div class="radar-aluno-cell">
-              <img src="${avatarSrc}" alt="${al.nome}" class="radar-aluno-avatar">
-              <div>
-                <strong style="color:#0f172a; font-size:13.5px; display:block;">${al.nome}</strong>
-                <span style="font-size:11px; color:#64748b;">RA: ${al.ra || 'RA' + String(al.id).padStart(7, '0')} • ${item.turma ? item.turma.codigo : ''}</span>
+            <strong style="color:#0f172a; font-size:13px; display:block;">${al.nome}</strong>
+            <span style="font-size:11px; color:#64748b;">RA: ${al.ra || 'RA' + String(al.id).padStart(7, '0')} &bull; ${item.turma ? item.turma.codigo : ''}</span>
+          </td>
+          <td>
+            <span class="badge" style="background:${gravidadeBg}; color:${gravidadeColor}; font-weight:700; font-size:11px; padding:3px 8px; border-radius:5px;">${gravidade}</span>
+          </td>
+          <td style="font-weight:700; color:${freqColor}; font-size:13px;">
+            ${freqPct}%
+            <div style="font-size:11px; color:#64748b; font-weight:400;">${item.hist ? item.hist.faltas : 0}F / ${item.hist ? item.hist.atrasos : 0}A</div>
+          </td>
+          <td>${statusContato}</td>
+          <td>
+            <div style="font-size:11.5px; color:#334155;">
+              <div style="display:flex; align-items:center; gap:4px; margin-bottom:3px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.1 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 18.92z"></path></svg>
+                <a href="${whatsappLink}" target="_blank" style="color:#15803d; text-decoration:none; font-size:11px;">${telefone}</a>
+              </div>
+              <div style="display:flex; align-items:center; gap:4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <a href="mailto:${email}" style="color:#0284c7; text-decoration:none; font-size:11px;">${email}</a>
               </div>
             </div>
           </td>
           <td>
-            <div style="font-weight:700; color:${freqColor}; font-size:13px;">${freqPct}%</div>
-            <div style="font-size:11px; color:#64748b;">${item.hist ? item.hist.faltas : 0} falta(s) | ${item.hist ? item.hist.atrasos : 0} atraso(s)</div>
-          </td>
-          <td>
-            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
-              ${urgenciaBadge}
-              <span style="font-size:12px; color:#334155; line-height:1.35;">${item.motivoUrgencia}</span>
-            </div>
-          </td>
-          <td>
-            ${contatoBadge}
-          </td>
-          <td>
-            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-              <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato(${al.id}, '${al.nome.replace(/'/g, "\\'")}')" title="Registrar Contato Hoje (WhatsApp/Ligação)" style="font-size:11.5px; padding:4px 8px;">
-                📞 Contato
+            <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato(${al.id}, '${al.nome.replace(/'/g, "\\'")}')" style="font-size:11px; padding:3px 7px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 11.9"></path></svg>
+                Contato
               </button>
               ${item.atestadoPendente ? `
-                <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalValidarAtestado(${item.atestadoPendente.id})" title="Homologar ou Encaminhar Atestado" style="font-size:11.5px; padding:4px 8px; background:#0284c7; border-color:#0284c7;">
-                  📝 Validar
-                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalValidarAtestado(${item.atestadoPendente.id})" style="font-size:11px; padding:3px 7px; background:#0284c7; border-color:#0284c7;">Validar</button>
               ` : `
-                <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalAgendarCompensacao(${al.id}, '${al.nome.replace(/'/g, "\\'")}')" title="Agendar Compensação de Ausência" style="font-size:11.5px; padding:4px 8px;">
-                  ⚖️ Compensar
-                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalAgendarCompensacao(${al.id}, '${al.nome.replace(/'/g, "\\'")}')" style="font-size:11px; padding:3px 7px;">Compensar</button>
               `}
-              <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirProntuario(${al.id})" title="Abrir Prontuário Completo e Linha do Tempo" style="font-size:11.5px; padding:4px 8px; background:#f8fafc;">
-                📋 Prontuário
-              </button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirProntuario(${al.id})" style="font-size:11px; padding:3px 7px; background:#f8fafc;">Prontuário</button>
             </div>
           </td>
         </tr>
@@ -777,10 +768,17 @@ class PortalOrientadorController {
         <div style="flex:1;">
           <h3 style="font-size:17px; font-weight:800; color:#0f172a; margin:0 0 4px 0;">${al.nome}</h3>
           <div style="font-size:12px; color:#475569;">
-            RA: <strong>${al.ra || 'RA' + String(al.id).padStart(7, '0')}</strong> • Turma: <strong>${prontuario.turma ? prontuario.turma.codigo : ''}</strong> • Freq: <strong>${hist.freqPorcentagem}%</strong> (${hist.faltas} faltas, ${hist.atrasos} atrasos)
+            RA: <strong>${al.ra || 'RA' + String(al.id).padStart(7, '0')}</strong> &bull; Turma: <strong>${prontuario.turma ? prontuario.turma.codigo : ''}</strong> &bull; Freq: <strong>${hist.freqPorcentagem}%</strong> (${hist.faltas} faltas, ${hist.atrasos} atrasos)
           </div>
-          <div style="font-size:12px; color:#64748b; margin-top:4px;">
-            📧 ${al.email || 'aluno@senai.br'} • 📱 WhatsApp/Cel: (11) 98452-1029
+          <div style="font-size:12px; color:#64748b; margin-top:4px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <a href="mailto:${al.email || 'aluno@senai.br'}" style="color:#0284c7; text-decoration:none; display:flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              ${al.email || 'aluno@senai.br'}
+            </a>
+            <a href="https://wa.me/55${(al.telefone || al.celular || '11984521029').replace(/\D/g,'')}" target="_blank" style="color:#15803d; text-decoration:none; display:flex; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 11.9"></path></svg>
+              ${al.telefone || al.celular || '(11) 98452-1029'}
+            </a>
           </div>
         </div>
         <div style="display:flex; flex-direction:column; gap:6px;">
@@ -788,7 +786,11 @@ class PortalOrientadorController {
             + Novo Atendimento
           </button>
           <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato(${al.id}, '${al.nome.replace(/'/g, "\\'")}')" style="font-size:12px; padding:6px 12px;">
-            📞 Registrar Contato
+            Registrar Contato
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.exportarProntuarioPDF()" style="font-size:12px; padding:6px 12px; display:flex; align-items:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9"/><polyline points="6 9 14 9 14 2"/></svg>
+            Exportar PDF
           </button>
         </div>
       </div>
@@ -1006,6 +1008,45 @@ class PortalOrientadorController {
       window.app.mostrarToast(`Atestado processado como ${novoStatus}!`, 'success');
       this.recarregarAbaAtiva();
     }
+  }
+
+  // =========================================================================
+  // EXPORTAÇÃO PDF
+  // =========================================================================
+  exportarProntuarioPDF() {
+    window.print();
+    window.app && window.app.mostrarToast('Use "Salvar como PDF" na janela de impressão.', 'info');
+  }
+
+  exportarAtendimentosPDF() {
+    window.print();
+    window.app && window.app.mostrarToast('Use "Salvar como PDF" na janela de impressão.', 'info');
+  }
+
+  exportarEncaminhamentoPDF(atendimentoId) {
+    if (!window.db) return;
+    const atend = (window.db.data.atendimentosOrientacao || []).find(a => a.id === Number(atendimentoId));
+    if (!atend) return;
+    const aluno = (window.db.data.alunos || []).find(a => a.id === atend.alunoId);
+    const nomeAluno = aluno ? aluno.nome : 'Aluno';
+    const user = window.auth ? window.auth.getUser() : {};
+    const conteudo = `
+      <html><head><title>Encaminhamento — ${nomeAluno}</title>
+      <style>body{font-family:Arial,sans-serif;padding:30px;color:#111;}h2{color:#0284c7;}table{border-collapse:collapse;width:100%;}td,th{border:1px solid #ccc;padding:8px;font-size:13px;}th{background:#f1f5f9;}</style>
+      </head><body>
+      <h2>Encaminhamento de Orientação Educacional</h2>
+      <p><strong>Aluno:</strong> ${nomeAluno} &nbsp;|&nbsp; <strong>Data:</strong> ${atend.data} &nbsp;|&nbsp; <strong>Tipo:</strong> ${atend.tipo}</p>
+      <p><strong>Foco:</strong> ${atend.foco} &nbsp;|&nbsp; <strong>Encaminhamento:</strong> ${atend.encaminhamento}</p>
+      <p><strong>Resumo:</strong> ${atend.resumo}</p>
+      <p><strong>Combinados:</strong> ${atend.combinados || '—'}</p>
+      <hr><p style="font-size:11px;color:#666;">Registrado por: ${atend.autor || (user && user.nome) || 'Orientação'} — SENAI</p>
+      </body></html>
+    `;
+    const win = window.open('', '_blank');
+    win.document.write(conteudo);
+    win.document.close();
+    win.focus();
+    setTimeout(() => { win.print(); win.close(); }, 400);
   }
 }
 

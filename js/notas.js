@@ -105,12 +105,6 @@ class NotasController {
         notaValor = 85.0;
       }
 
-      const situacao = notaValor >= 70.0 
-        ? '<span class="badge-comp registrado">Aprovado</span>' 
-        : (notaValor >= 50.0 
-            ? '<span class="badge-comp em-andamento">Em Recuperação</span>' 
-            : '<span class="badge-comp pendente">Reprovado</span>');
-
       return `
         <tr>
           <td style="text-align: center; font-weight: 700; color: #64748b;">${numero}</td>
@@ -129,9 +123,6 @@ class NotasController {
               ${bloqueado ? 'disabled readonly title="Diário fechado ou aguardando aprovação"' : ''}
               style="width: 76px; text-align: center; font-weight: 700; ${bloqueado ? 'background:#f1f5f9;cursor:not-allowed;' : ''}"
               onchange="window.notasController.atualizarNotaAluno(${aluno.id}, this.value)">
-          </td>
-          <td style="text-align: center;">
-            ${situacao}
           </td>
         </tr>
       `;
@@ -175,7 +166,7 @@ class NotasController {
       somaMedias += Number(mediaProf);
 
       const situacaoClass = isAprovado ? 'aprovado' : (Number(mediaProf) >= 50.0 ? 'em-andamento' : 'reprovado');
-      const situacaoText = isAprovado ? 'Aprovado' : (Number(mediaProf) >= 50.0 ? 'Em Recuperação' : 'Retido por Nota');
+      const situacaoText = isAprovado ? 'Adequado' : (Number(mediaProf) >= 50.0 ? 'Em Recuperação' : 'Necessita Reforço');
 
       return `
         <tr>
@@ -210,9 +201,9 @@ class NotasController {
     const footerStats = document.getElementById('mediasFooterStats');
     if (footerStats) {
       footerStats.innerHTML = `
-        <span class="resumo-stats-item">Média da Turma (0-100): <strong>${mediaTurma.replace('.', ',')}</strong></span>
-        <span class="resumo-stats-item">Aprovados: <strong>${aprovados} (${pctAprovados}%)</strong></span>
-        <span class="resumo-stats-item">Reprovados / Em Análise: <strong>${reprovados} (${pctReprovados}%)</strong></span>
+        <span class="resumo-stats-item">Média da Turma (0–100): <strong>${mediaTurma.replace('.', ',')}</strong></span>
+        <span class="resumo-stats-item">Com desempenho adequado: <strong>${aprovados} (${pctAprovados}%)</strong></span>
+        <span class="resumo-stats-item">Em acompanhamento: <strong>${reprovados} (${pctReprovados}%)</strong></span>
       `;
     }
   }
