@@ -22,17 +22,18 @@ class PortalOrientadorController {
   init() {
     if (!window.db) return;
 
-    // Sincroniza turma selecionada
-    if (window.app && window.app.turmaAtiva) {
-      this.turmaId = window.app.turmaAtiva.id;
-    } else {
-      const turmas = window.db.getTurmas('EM_ANDAMENTO');
-      if (turmas && turmas.length > 0) this.turmaId = turmas[0].id;
+    // Sincroniza turma selecionada com fallbacks seguros
+    const turmas = (window.db.getTurmas && window.db.getTurmas('EM_ANDAMENTO')) || (window.db.data && window.db.data.turmas) || [];
+    if (window.app && window.app.turmaAtiva && window.app.turmaAtiva.id) {
+      this.turmaId = Number(window.app.turmaAtiva.id);
+    } else if (turmas.length > 0) {
+      this.turmaId = Number(turmas[0].id);
+      if (window.app) window.app.turmaAtiva = turmas[0];
     }
 
     this._popularSelectsTurma();
     this._bindEvents();
-    this.navegarAba(this.currentSubTab);
+    this.navegarAba(this.currentSubTab || 'radar');
   }
 
   _bindEvents() {
@@ -41,37 +42,54 @@ class PortalOrientadorController {
 
     // Atualização reativa em tempo real com o banco central
     window.addEventListener('renova:db-updated', () => {
-      if (window.auth && window.auth.isOrientador()) {
+      if (window.auth && window.auth.isOrientador && window.auth.isOrientador()) {
         this.recarregarAbaAtiva();
       }
     });
   }
 
   _popularSelectsTurma() {
-    const sel = document.getElementById('orientadorTurmaSelectGlobal');
-    if (!sel || !window.db) return;
+    if (!window.db) return;
+    const turmas = (window.db.getTurmas && window.db.getTurmas('EM_ANDAMENTO')) || (window.db.data && window.db.data.turmas) || [];
+    if (turmas.length === 0) return;
 
-    const turmas = window.db.getTurmas('EM_ANDAMENTO') || [];
-    sel.innerHTML = turmas.map(t => 
-      `<option value="${t.id}" ${t.id === Number(this.turmaId) ? 'selected' : ''}>${t.codigo} — ${t.nome || t.ucNome}</option>`
-    ).join('');
+    if (!turmas.some(t => Number(t.id) === Number(this.turmaId))) {
+      this.turmaId = Number(turmas[0].id);
+      if (window.app) window.app.turmaAtiva = turmas[0];
+    }
 
-    sel.onchange = (e) => {
-      this.turmaId = Number(e.target.value);
-      if (window.app) {
-        window.app.turmaAtiva = (window.db.data.turmas || []).find(t => t.id === this.turmaId);
-      }
-      this.recarregarAbaAtiva();
-    };
+    const selects = document.querySelectorAll('.orientador-turma-select, #orientadorTurmaSelect, #orientadorTurmaSelectGlobal');
+    selects.forEach(sel => {
+      sel.innerHTML = turmas.map(t => 
+        `<option value="${t.id}" ${Number(t.id) === Number(this.turmaId) ? 'selected' : ''}>${t.codigo} — ${t.nome || t.ucNome || ''}</option>`
+      ).join('');
+
+      sel.onchange = (e) => {
+        this.onTurmaChange(e.target.value);
+      };
+    });
+  }
+
+  onTurmaChange(turmaId) {
+    this.turmaId = Number(turmaId);
+    if (window.app && window.db && window.db.data) {
+      window.app.turmaAtiva = (window.db.data.turmas || []).find(t => Number(t.id) === this.turmaId);
+    }
+    // Sincroniza todos os selects da tela
+    document.querySelectorAll('.orientador-turma-select, #orientadorTurmaSelect, #orientadorTurmaSelectGlobal').forEach(sel => {
+      sel.value = this.turmaId;
+    });
+    this.recarregarAbaAtiva();
   }
 
   navegarAba(aba) {
-    this.currentSubTab = aba;
+    this.currentSubTab = aba || 'radar';
+    const subviews = ['radar', 'calendario', 'atestados', 'compensacoes', 'prontuario'];
 
     // Atualiza botões da barra lateral do Orientador
-    document.querySelectorAll('#sidebarOrientSection .nav-item, #sidebarModeOrientador .nav-item').forEach(btn => {
+    document.querySelectorAll('#sidebarOrientSection .nav-item, #sidebarModeOrientador .nav-item, .orientador-sidebar .nav-item').forEach(btn => {
       const target = btn.getAttribute('data-target-tab');
-      if (target === `orientador_${aba}` || target === aba || (aba === 'radar' && target === 'orientador')) {
+      if (target === `orientador_${this.currentSubTab}` || target === this.currentSubTab || (this.currentSubTab === 'radar' && target === 'orientador')) {
         btn.classList.add('active');
       } else {
         btn.classList.remove('active');
@@ -80,18 +98,28 @@ class PortalOrientadorController {
 
     // Atualiza botões de sub-abas internas
     document.querySelectorAll('.orientador-tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-subtab') === aba);
+      btn.classList.toggle('active', btn.getAttribute('data-subtab') === this.currentSubTab);
     });
 
-    // Oculta todas as sub-views e exibe a ativa
-    const subviews = ['radar', 'calendario', 'atestados', 'compensacoes', 'prontuario'];
+    // Alterna seções principais tabSection_orientador_*
     subviews.forEach(s => {
-      const el = document.getElementById(`orientadorSubView_${s}`);
-      if (el) el.style.display = (s === aba) ? 'block' : 'none';
+      const el = document.getElementById(`tabSection_orientador_${s}`) || document.getElementById(`orientadorSubView_${s}`);
+      if (el) {
+        el.style.display = (s === this.currentSubTab) ? 'block' : 'none';
+        if (s === this.currentSubTab) {
+          el.classList.remove('section-entering');
+          void el.offsetWidth;
+          el.classList.add('section-entering');
+        }
+      }
     });
 
     this.recarregarAbaAtiva();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  recarregarTelaAtiva() {
+    this.recarregarAbaAtiva();
   }
 
   recarregarAbaAtiva() {

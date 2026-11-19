@@ -3202,12 +3202,14 @@
 
 
           <!-- ===================================================================
-             ABA 12: PORTAL DO ORIENTADOR (QUALIDADE DE VIDA & ACOMPANHAMENTO DIÁRIO)
+             PORTAL DO ORIENTADOR (QUALIDADE DE VIDA & ACOMPANHAMENTO DIÁRIO)
+             5 SEÇÕES INDIVIDUAIS CONECTADAS À BARRA LATERAL
              =================================================================== -->
-          <section id="tabSection_orientador" class="tab-view-section" style="display: none;">
-            <div class="orientador-page-container">
 
-              <!-- Topbar Principal com Título, Seletor de Turma e Ações Globais -->
+          <!-- 1. RADAR DO DIA -->
+          <section id="tabSection_orientador_radar" class="tab-view-section" style="display: none;">
+            <div class="orientador-page-container">
+              <!-- Topbar Principal -->
               <div class="orientador-topbar">
                 <div class="orientador-titlebox">
                   <div class="orientador-icon-badge">
@@ -3218,165 +3220,409 @@
                   </div>
                   <div>
                     <h1 class="orientador-main-title">Orientação Educacional & Qualidade de Vida</h1>
-                    <p class="orientador-main-sub">Acompanhamento diário de assiduidade, escuta ativa, atestados e plano de suporte ao estudante.</p>
+                    <p class="orientador-main-sub">Radar do Dia • Acompanhamento diário de assiduidade, escuta ativa e prioridades.</p>
                   </div>
                 </div>
 
                 <div class="orientador-topbar-actions">
                   <div class="orientador-select-wrap">
-                    <label for="orientadorTurmaSelect" class="orientador-field-label">Turma Ativa:</label>
-                    <select id="orientadorTurmaSelect" class="orientador-select" onchange="window.portalOrientadorController.onTurmaChange(this.value)">
+                    <label class="orientador-field-label">Turma Ativa:</label>
+                    <select class="orientador-select orientador-turma-select" onchange="window.portalOrientadorController.onTurmaChange(this.value)">
                       <!-- Preenchido via JS -->
                     </select>
                   </div>
 
-                  <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalContato()" title="Registrar contato telefônico, presencial ou WhatsApp com aluno ou responsável">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato()" title="Registrar contato telefônico, presencial ou WhatsApp com aluno ou responsável">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                     <span>+ Registrar Contato</span>
                   </button>
 
-                  <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalAtendimento()" title="Iniciar ou agendar atendimento psicopedagógico/qualidade de vida">
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalNovoAtendimento()" title="Iniciar ou agendar atendimento psicopedagógico/qualidade de vida">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
-                    <span>+ Novo Atendimento</span>
+                    <span>Novo Atendimento</span>
                   </button>
                 </div>
               </div>
 
-              <!-- Abas Superiores do Portal do Orientador -->
-              <div class="orientador-tabs-nav">
-                <button type="button" class="orientador-tab-btn active" data-subtab="radar" onclick="window.portalOrientadorController.navegarAba('radar')">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                  <span>Radar do Dia</span>
-                </button>
-                <button type="button" class="orientador-tab-btn" data-subtab="calendario" onclick="window.portalOrientadorController.navegarAba('calendario')">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                  <span>Calendário Operacional</span>
-                </button>
-                <button type="button" class="orientador-tab-btn" data-subtab="atestados" onclick="window.portalOrientadorController.navegarAba('atestados')">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                  <span>Faltas & Atestados</span>
-                </button>
-                <button type="button" class="orientador-tab-btn" data-subtab="compensacoes" onclick="window.portalOrientadorController.navegarAba('compensacoes')">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                  <span>Compensações de Ausência</span>
-                </button>
-                <button type="button" class="orientador-tab-btn" data-subtab="prontuario" onclick="window.portalOrientadorController.navegarAba('prontuario')">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                  <span>Prontuário & Carômetro</span>
-                </button>
-              </div>
-
-              <!-- ========================================== -->
-              <!-- SUB-VIEW 1: RADAR DO DIA                  -->
-              <!-- ========================================== -->
-              <div id="orientadorSubView_radar" class="orientador-subview">
-                <!-- 4 KPI Cards -->
-                <div id="orientadorKpiCards" class="orientador-kpi-grid"></div>
-
-                <!-- Tabela de Urgências do Dia -->
-                <div class="orientador-card">
-                  <div class="orientador-card-header">
-                    <div>
-                      <h3 class="orientador-card-title">Fila de Prioridades & Casos de Atenção</h3>
-                      <p class="orientador-card-sub">Alunos com faltas consecutivas, atestados aguardando homologação ou contatos pendentes no dia.</p>
-                    </div>
+              <!-- 4 KPI Cards Operacionais -->
+              <div class="radar-kpi-grid">
+                <div class="radar-kpi-card">
+                  <div class="radar-kpi-icon kpi-red">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                   </div>
-                  <div id="orientadorTabelaRadarContainer"></div>
+                  <div>
+                    <div id="radarKpiFaltas" class="radar-kpi-val">0</div>
+                    <div class="radar-kpi-label">Faltas Sem Justificativa</div>
+                  </div>
+                </div>
+                <div class="radar-kpi-card">
+                  <div class="radar-kpi-icon kpi-amber">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  </div>
+                  <div>
+                    <div id="radarKpiAtrasos" class="radar-kpi-val">0</div>
+                    <div class="radar-kpi-label">Alunos com 5+ Atrasos</div>
+                  </div>
+                </div>
+                <div class="radar-kpi-card">
+                  <div class="radar-kpi-icon kpi-blue">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                  </div>
+                  <div>
+                    <div id="radarKpiAtestados" class="radar-kpi-val">0</div>
+                    <div class="radar-kpi-label">Atestados Aguardando Validação</div>
+                  </div>
+                </div>
+                <div class="radar-kpi-card">
+                  <div class="radar-kpi-icon kpi-purple">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  </div>
+                  <div>
+                    <div id="radarKpiCompensacoes" class="radar-kpi-val">0</div>
+                    <div class="radar-kpi-label">Compensações em Aberto</div>
+                  </div>
                 </div>
               </div>
 
-              <!-- ========================================== -->
-              <!-- SUB-VIEW 2: CALENDÁRIO OPERACIONAL        -->
-              <!-- ========================================== -->
-              <div id="orientadorSubView_calendario" class="orientador-subview" style="display: none;">
-                <div class="orientador-cal-layout">
-                  <div class="orientador-cal-main">
-                    <div class="orientador-cal-header-bar">
-                      <div class="orientador-cal-nav">
-                        <button type="button" class="orientador-btn-icon" onclick="window.portalOrientadorController.navegarMesCalendario(-1)" title="Mês anterior">&larr;</button>
-                        <h2 id="orientadorCalMesAnoTitulo" class="orientador-cal-title">Mês Ano</h2>
-                        <button type="button" class="orientador-btn-icon" onclick="window.portalOrientadorController.navegarMesCalendario(1)" title="Próximo mês">&rarr;</button>
-                      </div>
+              <!-- Tabela de Casos Prioritários do Dia -->
+              <div class="radar-urgency-card">
+                <div class="radar-urgency-header">
+                  <div class="radar-urgency-title">
+                    <span class="title-accent-bar"></span>
+                    Fila de Casos Prioritários do Dia
+                  </div>
+                  <span id="radarFilaCountBadge" class="badge" style="background:#eff6ff; color:#1d4ed8; font-weight:700; padding:4px 10px; border-radius:9999px;">0 casos prioritários</span>
+                </div>
+                <div class="table-responsive">
+                  <table class="radar-urgency-table">
+                    <thead>
+                      <tr>
+                        <th>ALUNO (RA / TURMA)</th>
+                        <th>SITUAÇÃO / FREQ %</th>
+                        <th>MOTIVO DA URGÊNCIA</th>
+                        <th>STATUS DO CONTATO</th>
+                        <th>AÇÕES RÁPIDAS</th>
+                      </tr>
+                    </thead>
+                    <tbody id="radarFilaUrgenciaTbody">
+                      <!-- Preenchido via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
 
-                      <div class="orientador-cal-filtros">
-                        <label class="orientador-filter-chip">
-                          <input type="checkbox" checked onchange="window.portalOrientadorController.toggleFiltroCal('ATENDIMENTO')">
-                          <span>Atendimentos</span>
-                        </label>
-                        <label class="orientador-filter-chip">
-                          <input type="checkbox" checked onchange="window.portalOrientadorController.toggleFiltroCal('COMPENSACAO')">
-                          <span>Compensações</span>
-                        </label>
-                        <label class="orientador-filter-chip">
-                          <input type="checkbox" checked onchange="window.portalOrientadorController.toggleFiltroCal('ATESTADO')">
-                          <span>Atestados</span>
-                        </label>
-                        <label class="orientador-filter-chip">
-                          <input type="checkbox" checked onchange="window.portalOrientadorController.toggleFiltroCal('AVALIACAO')">
-                          <span>Avaliações Docentes</span>
-                        </label>
-                      </div>
-                    </div>
+          <!-- 2. CALENDÁRIO OPERACIONAL -->
+          <section id="tabSection_orientador_calendario" class="tab-view-section" style="display: none;">
+            <div class="orientador-page-container">
+              <!-- Topbar Principal -->
+              <div class="orientador-topbar">
+                <div class="orientador-titlebox">
+                  <div class="orientador-icon-badge">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 class="orientador-main-title">Orientação Educacional & Qualidade de Vida</h1>
+                    <p class="orientador-main-sub">Calendário Operacional • Atendimentos psicopedagógicos, compensações e prazos da turma.</p>
+                  </div>
+                </div>
 
-                    <div id="orientadorCalendarioGrid" class="orientador-calendar-grid"></div>
+                <div class="orientador-topbar-actions">
+                  <div class="orientador-select-wrap">
+                    <label class="orientador-field-label">Turma Ativa:</label>
+                    <select class="orientador-select orientador-turma-select" onchange="window.portalOrientadorController.onTurmaChange(this.value)">
+                      <!-- Preenchido via JS -->
+                    </select>
                   </div>
 
-                  <!-- Painel Lateral: Detalhes do Dia Selecionado -->
-                  <div id="orientadorPainelDiaSelecionado" class="orientador-cal-sidepanel"></div>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato()" title="Registrar contato telefônico, presencial ou WhatsApp com aluno ou responsável">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+ Registrar Contato</span>
+                  </button>
+
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalNovoAtendimento()" title="Iniciar ou agendar atendimento psicopedagógico/qualidade de vida">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
+                    <span>Novo Atendimento</span>
+                  </button>
                 </div>
               </div>
 
-              <!-- ========================================== -->
-              <!-- SUB-VIEW 3: FALTAS & ATESTADOS             -->
-              <!-- ========================================== -->
-              <div id="orientadorSubView_atestados" class="orientador-subview" style="display: none;">
-                <div class="orientador-card">
-                  <div class="orientador-card-header">
-                    <div>
-                      <h3 class="orientador-card-title">Triagem de Justificativas e Atestados</h3>
-                      <p class="orientador-card-sub">Homologue atestados médicos para abonar faltas no Diário Docente ou encaminhe para compensação de ausência.</p>
+              <!-- Layout do Calendário -->
+              <div class="orientador-calendar-layout">
+                <div class="orientador-calendar-main">
+                  <div class="cal-toolbar">
+                    <div class="cal-nav-group">
+                      <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.navegarMesCalendario(-1)" title="Mês anterior">&larr; Anterior</button>
+                      <div id="orientadorCalMonthTitle" class="cal-nav-title">Novembro de 2026</div>
+                      <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.navegarMesCalendario(1)" title="Próximo mês">Próximo &rarr;</button>
+                    </div>
+
+                    <div class="cal-view-switch">
+                      <button type="button" class="cal-view-btn active" data-cal-view="mensal" onclick="window.portalOrientadorController.setCalView('mensal')">Mês</button>
+                      <button type="button" class="cal-view-btn" data-cal-view="semanal" onclick="window.portalOrientadorController.setCalView('semanal')">Semana</button>
+                    </div>
+
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                      <label style="font-size:12px; font-weight:600; color:var(--text-muted);">Filtrar:</label>
+                      <select class="filter-select" style="font-size:12px; padding:4px 8px;" onchange="window.portalOrientadorController.setCalFiltro(this.value)">
+                        <option value="TODOS">Todos os eventos</option>
+                        <option value="ATENDIMENTO">Atendimentos</option>
+                        <option value="COMPENSACAO">Compensações</option>
+                        <option value="ATESTADO">Atestados</option>
+                        <option value="AVALIACAO">Avaliações Docentes</option>
+                      </select>
                     </div>
                   </div>
-                  <div id="orientadorTabelaAtestadosContainer"></div>
-                </div>
-              </div>
 
-              <!-- ========================================== -->
-              <!-- SUB-VIEW 4: COMPENSAÇÕES                  -->
-              <!-- ========================================== -->
-              <div id="orientadorSubView_compensacoes" class="orientador-subview" style="display: none;">
-                <div class="orientador-card">
-                  <div class="orientador-card-header">
+                  <div class="cal-grid-header">
+                    <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div>
+                  </div>
+                  <div id="orientadorCalGridBody" class="cal-grid-body">
+                    <!-- Células do mês -->
+                  </div>
+                </div>
+
+                <!-- Painel Lateral: Detalhes do Dia Selecionado -->
+                <div class="orientador-cal-sidebar" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg, 12px); padding:20px; box-shadow:var(--shadow-sm);">
+                  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
                     <div>
-                      <h3 class="orientador-card-title">Gestão de Compensações de Ausência</h3>
-                      <p class="orientador-card-sub">Acompanhe planos de reposição pedagógica e registre o cumprimento de atividades pelos alunos.</p>
+                      <div style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--text-muted); letter-spacing:0.5px;">Dia Selecionado</div>
+                      <h4 id="orientadorCalSideDateLabel" style="font-size:15px; font-weight:800; color:var(--text-main); margin:2px 0 0 0;">—</h4>
                     </div>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalCompensacao()">
-                      + Agendar Nova Compensação
+                    <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalNovoAtendimentoComData(window.portalOrientadorController.selectedDay)" title="Agendar compromisso neste dia" style="font-size:11.5px; padding:4px 8px;">
+                      + Agendar
                     </button>
                   </div>
-                  <div id="orientadorTabelaCompensacoesContainer"></div>
-                </div>
-              </div>
-
-              <!-- ========================================== -->
-              <!-- SUB-VIEW 5: PRONTUÁRIO & CARÔMETRO        -->
-              <!-- ========================================== -->
-              <div id="orientadorSubView_prontuario" class="orientador-subview" style="display: none;">
-                <div class="orientador-card">
-                  <div class="orientador-card-header">
-                    <div>
-                      <h3 class="orientador-card-title">Carômetro da Turma & Prontuários Integrados</h3>
-                      <p class="orientador-card-sub">Visualize em tempo real a situação de cada aluno com badges de presença, contatos realizados e histórico completo.</p>
-                    </div>
-                    <div style="min-width: 260px;">
-                      <input type="text" id="orientadorBuscaAlunoProntuario" class="orientador-search-input" placeholder="Buscar aluno por nome..." oninput="window.portalOrientadorController.filtrarCarometro(this.value)">
-                    </div>
+                  <div id="orientadorCalSideEvents" style="display:flex; flex-direction:column; gap:10px; max-height:480px; overflow-y:auto; padding-right:4px;">
+                    <!-- Eventos do dia -->
                   </div>
-                  <div id="orientadorCarometroGrid" class="orientador-carometro-grid"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. FALTAS & ATESTADOS -->
+          <section id="tabSection_orientador_atestados" class="tab-view-section" style="display: none;">
+            <div class="orientador-page-container">
+              <!-- Topbar Principal -->
+              <div class="orientador-topbar">
+                <div class="orientador-titlebox">
+                  <div class="orientador-icon-badge">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 class="orientador-main-title">Orientação Educacional & Qualidade de Vida</h1>
+                    <p class="orientador-main-sub">Faltas & Atestados • Triagem, validação de comprovantes médicos e abonos legais.</p>
+                  </div>
+                </div>
+
+                <div class="orientador-topbar-actions">
+                  <div class="orientador-select-wrap">
+                    <label class="orientador-field-label">Turma Ativa:</label>
+                    <select class="orientador-select orientador-turma-select" onchange="window.portalOrientadorController.onTurmaChange(this.value)">
+                      <!-- Preenchido via JS -->
+                    </select>
+                  </div>
+
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato()" title="Registrar contato telefônico, presencial ou WhatsApp com aluno ou responsável">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+ Registrar Contato</span>
+                  </button>
+
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalNovoAtendimento()" title="Iniciar ou agendar atendimento psicopedagógico/qualidade de vida">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
+                    <span>Novo Atendimento</span>
+                  </button>
                 </div>
               </div>
 
+              <!-- Tabela de Atestados -->
+              <div class="radar-urgency-card">
+                <div class="radar-urgency-header">
+                  <div>
+                    <h3 style="font-size:16px; font-weight:700; color:var(--text-main); margin:0;">Triagem de Justificativas e Atestados</h3>
+                    <p style="font-size:12.5px; color:var(--text-muted); margin:4px 0 0 0;">Homologue atestados médicos ou encaminhe para compensação de ausência.</p>
+                  </div>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <span id="orientadorAtestadosCount" class="badge" style="background:#eff6ff; color:#1d4ed8; font-weight:700; padding:4px 10px; border-radius:9999px;">0 registros</span>
+                    <select id="filtroStatusAtestado" class="filter-select" style="font-size:12.5px;" onchange="window.portalOrientadorController.renderAtestados()">
+                      <option value="">Todos os status</option>
+                      <option value="PENDENTE">Apenas Pendentes</option>
+                      <option value="ABONADA">Abonadas (Dispensa D)</option>
+                      <option value="A_COMPENSAR">A Compensar</option>
+                      <option value="INJUSTIFICADA">Injustificadas</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="radar-urgency-table">
+                    <thead>
+                      <tr>
+                        <th>ALUNO</th>
+                        <th>TIPO</th>
+                        <th>PERÍODO</th>
+                        <th>MOTIVO / PARECER</th>
+                        <th>STATUS</th>
+                        <th>DOCUMENTO</th>
+                        <th>AÇÕES</th>
+                      </tr>
+                    </thead>
+                    <tbody id="orientadorAtestadosTbody">
+                      <!-- Preenchido via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. COMPENSAÇÕES DE AUSÊNCIA -->
+          <section id="tabSection_orientador_compensacoes" class="tab-view-section" style="display: none;">
+            <div class="orientador-page-container">
+              <!-- Topbar Principal -->
+              <div class="orientador-topbar">
+                <div class="orientador-titlebox">
+                  <div class="orientador-icon-badge">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <polyline points="1 20 1 14 7 14"></polyline>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 class="orientador-main-title">Orientação Educacional & Qualidade de Vida</h1>
+                    <p class="orientador-main-sub">Compensações de Ausência • Reposição pedagógica e cumprimento de horas.</p>
+                  </div>
+                </div>
+
+                <div class="orientador-topbar-actions">
+                  <div class="orientador-select-wrap">
+                    <label class="orientador-field-label">Turma Ativa:</label>
+                    <select class="orientador-select orientador-turma-select" onchange="window.portalOrientadorController.onTurmaChange(this.value)">
+                      <!-- Preenchido via JS -->
+                    </select>
+                  </div>
+
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato()" title="Registrar contato telefônico, presencial ou WhatsApp com aluno ou responsável">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+ Registrar Contato</span>
+                  </button>
+
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalNovoAtendimento()" title="Iniciar ou agendar atendimento psicopedagógico/qualidade de vida">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
+                    <span>Novo Atendimento</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tabela de Compensações -->
+              <div class="radar-urgency-card">
+                <div class="radar-urgency-header">
+                  <div>
+                    <h3 style="font-size:16px; font-weight:700; color:var(--text-main); margin:0;">Gestão de Compensações de Ausência</h3>
+                    <p style="font-size:12.5px; color:var(--text-muted); margin:4px 0 0 0;">Acompanhe planos de reposição pedagógica e dê baixa em atividades cumpridas.</p>
+                  </div>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <span id="orientadorCompensacoesCount" class="badge" style="background:#eff6ff; color:#1d4ed8; font-weight:700; padding:4px 10px; border-radius:9999px;">0 compensações</span>
+                    <select id="filtroStatusCompensacao" class="filter-select" style="font-size:12.5px;" onchange="window.portalOrientadorController.renderCompensacoes()">
+                      <option value="">Todos os status</option>
+                      <option value="AGENDADA">Agendadas</option>
+                      <option value="PENDENTE">Pendentes</option>
+                      <option value="CUMPRIDO">Cumpridas</option>
+                    </select>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalAgendarCompensacao()">
+                      + Agendar Compensação
+                    </button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="radar-urgency-table">
+                    <thead>
+                      <tr>
+                        <th>ALUNO</th>
+                        <th>CARGA</th>
+                        <th>ORIGEM / MOTIVO</th>
+                        <th>DATA AGENDADA</th>
+                        <th>ATIVIDADE PRESCRITA</th>
+                        <th>SITUAÇÃO</th>
+                        <th>AÇÕES</th>
+                      </tr>
+                    </thead>
+                    <tbody id="orientadorCompensacoesTbody">
+                      <!-- Preenchido via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. PRONTUÁRIO & CARÔMETRO -->
+          <section id="tabSection_orientador_prontuario" class="tab-view-section" style="display: none;">
+            <div class="orientador-page-container">
+              <!-- Topbar Principal -->
+              <div class="orientador-topbar">
+                <div class="orientador-titlebox">
+                  <div class="orientador-icon-badge">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 class="orientador-main-title">Orientação Educacional & Qualidade de Vida</h1>
+                    <p class="orientador-main-sub">Prontuário & Carômetro • Visão individualizada dos alunos e histórico de escuta.</p>
+                  </div>
+                </div>
+
+                <div class="orientador-topbar-actions">
+                  <div class="orientador-select-wrap">
+                    <label class="orientador-field-label">Turma Ativa:</label>
+                    <select class="orientador-select orientador-turma-select" onchange="window.portalOrientadorController.onTurmaChange(this.value)">
+                      <!-- Preenchido via JS -->
+                    </select>
+                  </div>
+
+                  <button type="button" class="btn btn-outline btn-sm" onclick="window.portalOrientadorController.abrirModalRegistrarContato()" title="Registrar contato telefônico, presencial ou WhatsApp com aluno ou responsável">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+ Registrar Contato</span>
+                  </button>
+
+                  <button type="button" class="btn btn-primary btn-sm" onclick="window.portalOrientadorController.abrirModalNovoAtendimento()" title="Iniciar ou agendar atendimento psicopedagógico/qualidade de vida">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
+                    <span>Novo Atendimento</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Carômetro Grid -->
+              <div class="radar-urgency-card">
+                <div class="radar-urgency-header">
+                  <div>
+                    <h3 style="font-size:16px; font-weight:700; color:var(--text-main); margin:0;">Carômetro da Turma & Prontuários Integrados</h3>
+                    <p style="font-size:12.5px; color:var(--text-muted); margin:4px 0 0 0;">Visualize em tempo real a situação de cada aluno com badges de presença, contatos realizados e histórico completo.</p>
+                  </div>
+                  <div style="min-width: 260px;">
+                    <input type="text" id="inputBuscaCarometro" class="filter-select" style="width:100%;" placeholder="Buscar aluno por nome ou RA..." oninput="window.portalOrientadorController.renderProntuario()">
+                  </div>
+                </div>
+                <div id="orientadorCarometroGrid" class="carometro-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px; margin-top:14px;">
+                  <!-- Preenchido via JS -->
+                </div>
+              </div>
             </div>
           </section>
 
@@ -4024,70 +4270,83 @@
        ========================================================================= -->
 
   <!-- 1. Modal: Registrar Contato Hoje -->
-  <div id="modalRegistrarContatoOrientador" class="modal-overlay" style="display:none;">
+  <div id="modalRegistrarContatoOrientador" class="modal-overlay">
     <div class="modal-box" style="max-width:520px;">
       <div class="modal-header">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
           Registrar Contato com Aluno / Responsável
         </h3>
-        <button type="button" class="btn-close-modal" onclick="window.portalOrientadorController.fecharModalContato()">&times;</button>
+        <button type="button" class="btn-close-modal" onclick="window.app.fecharModal('modalRegistrarContatoOrientador')">&times;</button>
       </div>
       <div class="modal-body">
+        <input type="hidden" id="inputContatoAlunoId">
         <div class="login-form-group" style="margin-bottom:12px;">
           <label class="filter-label">Aluno *</label>
-          <select id="contatoAlunoId" class="filter-select" style="width:100%;"></select>
+          <input type="text" id="inputContatoAlunoNome" class="filter-select" style="width:100%; background:#f8fafc;" readonly>
         </div>
-        <div class="login-form-group" style="margin-bottom:12px;">
-          <label class="filter-label">Canal de Contato *</label>
-          <select id="contatoCanal" class="filter-select" style="width:100%;">
-            <option value="WHATSAPP">WhatsApp com Estudante / Responsável</option>
-            <option value="LIGACAO">Ligação Telefônica</option>
-            <option value="PRESENCIAL">Presencial (Conversa na Unidade SENAI)</option>
-            <option value="RESPONSAVEL">Contato Direto com Pai / Responsável Legal</option>
-          </select>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div>
+            <label class="filter-label">Data do Contato *</label>
+            <input type="date" id="inputContatoData" class="filter-select" style="width:100%;">
+          </div>
+          <div>
+            <label class="filter-label">Canal de Contato *</label>
+            <select id="inputContatoCanal" class="filter-select" style="width:100%;">
+              <option value="WHATSAPP">WhatsApp (Estudante/Responsável)</option>
+              <option value="LIGACAO">Ligação Telefônica</option>
+              <option value="PRESENCIAL">Presencial (Conversa na Unidade)</option>
+              <option value="RESPONSAVEL">Contato com Responsável Legal</option>
+            </select>
+          </div>
         </div>
         <div class="login-form-group">
           <label class="filter-label">Observações e Retorno do Contato *</label>
-          <textarea id="contatoObs" class="filter-select" style="width:100%; height:80px; resize:vertical;" placeholder="Ex: Informou que estava com dor de cabeça. Irá ao médico e prometeu enviar o atestado hoje até as 18h."></textarea>
+          <textarea id="inputContatoObs" class="filter-select" style="width:100%; height:80px; resize:vertical;" placeholder="Ex: Informou que estava com dor de cabeça. Prometeu enviar atestado hoje até as 18h."></textarea>
         </div>
       </div>
       <div class="modal-footer" style="justify-content:flex-end; display:flex; gap:8px;">
-        <button type="button" class="btn btn-secondary" onclick="window.portalOrientadorController.fecharModalContato()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarContato()">Salvar Registro de Contato</button>
+        <button type="button" class="btn btn-secondary" onclick="window.app.fecharModal('modalRegistrarContatoOrientador')">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarContatoHoje()">Salvar Contato Hoje</button>
       </div>
     </div>
   </div>
 
   <!-- 2. Modal: Novo Atendimento de Orientação -->
-  <div id="modalNovoAtendimentoOrientador" class="modal-overlay" style="display:none;">
+  <div id="modalNovoAtendimentoOrientador" class="modal-overlay">
     <div class="modal-box" style="max-width:600px;">
       <div class="modal-header">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
           Registrar / Agendar Atendimento de Orientação
         </h3>
-        <button type="button" class="btn-close-modal" onclick="window.portalOrientadorController.fecharModalAtendimento()">&times;</button>
+        <button type="button" class="btn-close-modal" onclick="window.app.fecharModal('modalNovoAtendimentoOrientador')">&times;</button>
       </div>
       <div class="modal-body">
         <div class="login-form-group" style="margin-bottom:12px;">
           <label class="filter-label">Aluno *</label>
-          <select id="atendAlunoId" class="filter-select" style="width:100%;"></select>
+          <select id="selectAtendimentoAluno" class="filter-select" style="width:100%;"></select>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
           <div>
             <label class="filter-label">Data *</label>
-            <input type="date" id="atendData" class="filter-select" style="width:100%;">
+            <input type="date" id="inputAtendimentoData" class="filter-select" style="width:100%;">
           </div>
-          <div>
-            <label class="filter-label">Horário *</label>
-            <input type="time" id="atendHora" class="filter-select" style="width:100%;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <div>
+              <label class="filter-label">Início</label>
+              <input type="time" id="inputAtendimentoHoraInicio" class="filter-select" style="width:100%;" value="14:00">
+            </div>
+            <div>
+              <label class="filter-label">Fim</label>
+              <input type="time" id="inputAtendimentoHoraFim" class="filter-select" style="width:100%;" value="14:45">
+            </div>
           </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
           <div>
             <label class="filter-label">Tipo de Atendimento *</label>
-            <select id="atendTipo" class="filter-select" style="width:100%;">
+            <select id="selectAtendimentoTipo" class="filter-select" style="width:100%;">
               <option value="CONVOCACAO">Convocação pela Orientação</option>
               <option value="ESPONTANEO">Procura Espontânea do Aluno</option>
               <option value="ACOMPANHAMENTO">Acompanhamento Periódico</option>
@@ -4096,7 +4355,7 @@
           </div>
           <div>
             <label class="filter-label">Foco Principal *</label>
-            <select id="atendFoco" class="filter-select" style="width:100%;">
+            <select id="selectAtendimentoFoco" class="filter-select" style="width:100%;">
               <option value="QUALIDADE_VIDA">Qualidade de Vida / Acolhimento</option>
               <option value="FREQUENCIA">Frequência & Assiduidade</option>
               <option value="COMPENSACAO">Plano de Compensação de Faltas</option>
@@ -4105,133 +4364,128 @@
         </div>
         <div class="login-form-group" style="margin-bottom:12px;">
           <label class="filter-label">Resumo da Escuta / Motivo do Atendimento *</label>
-          <textarea id="atendResumo" class="filter-select" style="width:100%; height:70px; resize:vertical;" placeholder="Relato do estudante, pontos abordados e escuta ativa..."></textarea>
+          <textarea id="inputAtendimentoResumo" class="filter-select" style="width:100%; height:70px; resize:vertical;" placeholder="Relato do estudante, pontos abordados e escuta ativa..."></textarea>
         </div>
         <div class="login-form-group" style="margin-bottom:12px;">
           <label class="filter-label">Combinados Estabelecidos</label>
-          <textarea id="atendCombinados" class="filter-select" style="width:100%; height:55px; resize:vertical;" placeholder="Acordos firmados com o estudante (ex: entrega de tarefas até sexta-feira)..."></textarea>
+          <textarea id="inputAtendimentoCombinados" class="filter-select" style="width:100%; height:55px; resize:vertical;" placeholder="Acordos firmados com o estudante (ex: entrega de tarefas até sexta-feira)..."></textarea>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div>
-            <label class="filter-label">Encaminhamento</label>
-            <select id="atendEncaminhamento" class="filter-select" style="width:100%;">
-              <option value="NENHUM">Nenhum (Resolvido no Atendimento)</option>
-              <option value="COORDENACAO">Coordenação Pedagógica (Alerta)</option>
-              <option value="PSICOLOGIA">Serviço de Apoio / Psicologia</option>
-              <option value="ASSISTENCIA_SOCIAL">Assistência Social SENAI</option>
-            </select>
-          </div>
-          <div>
-            <label class="filter-label">Status do Atendimento</label>
-            <select id="atendStatus" class="filter-select" style="width:100%;">
-              <option value="REALIZADO">Realizado Hoje</option>
-              <option value="AGENDADO">Agendado para Futuro</option>
-              <option value="FALTOU_ATENDIMENTO">Aluno Faltou ao Agendamento</option>
-            </select>
-          </div>
+        <div class="login-form-group">
+          <label class="filter-label">Encaminhamento</label>
+          <select id="selectAtendimentoEncaminhamento" class="filter-select" style="width:100%;">
+            <option value="NENHUM">Nenhum (Resolvido no Atendimento)</option>
+            <option value="COORDENACAO">Coordenação Pedagógica (Alerta na Gestão)</option>
+            <option value="PSICOLOGIA">Serviço de Apoio / Psicologia</option>
+            <option value="ASSISTENCIA_SOCIAL">Assistência Social SENAI</option>
+          </select>
         </div>
       </div>
       <div class="modal-footer" style="justify-content:flex-end; display:flex; gap:8px;">
-        <button type="button" class="btn btn-secondary" onclick="window.portalOrientadorController.fecharModalAtendimento()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarAtendimento()">Salvar Atendimento</button>
+        <button type="button" class="btn btn-secondary" onclick="window.app.fecharModal('modalNovoAtendimentoOrientador')">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarNovoAtendimento()">Salvar Atendimento</button>
       </div>
     </div>
   </div>
 
   <!-- 3. Modal: Agendar Compensação -->
-  <div id="modalAgendarCompensacaoOrientador" class="modal-overlay" style="display:none;">
+  <div id="modalAgendarCompensacaoOrientador" class="modal-overlay">
     <div class="modal-box" style="max-width:520px;">
       <div class="modal-header">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
           Agendar Compensação de Ausência
         </h3>
-        <button type="button" class="btn-close-modal" onclick="window.portalOrientadorController.fecharModalCompensacao()">&times;</button>
+        <button type="button" class="btn-close-modal" onclick="window.app.fecharModal('modalAgendarCompensacaoOrientador')">&times;</button>
       </div>
       <div class="modal-body">
+        <input type="hidden" id="inputCompensacaoAlunoId">
         <div class="login-form-group" style="margin-bottom:12px;">
           <label class="filter-label">Aluno *</label>
-          <select id="compAlunoId" class="filter-select" style="width:100%;"></select>
-        </div>
-        <div class="login-form-group" style="margin-bottom:12px;">
-          <label class="filter-label">Atividade de Reposição *</label>
-          <input type="text" id="compAtividade" class="filter-select" style="width:100%;" placeholder="Ex: Resolução de Lista Teórico-Prática de Banco de Dados">
+          <input type="text" id="inputCompensacaoAlunoNome" class="filter-select" style="width:100%; background:#f8fafc;" readonly>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
           <div>
-            <label class="filter-label">Data Agendada *</label>
-            <input type="date" id="compData" class="filter-select" style="width:100%;">
+            <label class="filter-label">Horas de Obrigação *</label>
+            <input type="number" id="inputCompensacaoHoras" class="filter-select" style="width:100%;" value="2" min="1" max="20">
           </div>
           <div>
-            <label class="filter-label">Turno da Reposição *</label>
-            <select id="compTurno" class="filter-select" style="width:100%;">
-              <option value="Contraturno (Tarde)">Contraturno (Tarde)</option>
-              <option value="Contraturno (Manhã)">Contraturno (Manhã)</option>
-              <option value="Horário Letivo Especial">Horário Letivo Especial</option>
-              <option value="Remoto Supervisionado">Remoto Supervisionado</option>
-            </select>
+            <label class="filter-label">Data Agendada *</label>
+            <input type="date" id="inputCompensacaoDataAgendada" class="filter-select" style="width:100%;">
           </div>
         </div>
+        <div class="login-form-group" style="margin-bottom:12px;">
+          <label class="filter-label">Turno da Reposição *</label>
+          <select id="selectCompensacaoTurno" class="filter-select" style="width:100%;">
+            <option value="CONTRATURNO">Contraturno</option>
+            <option value="MANHA">Manhã</option>
+            <option value="TARDE">Tarde</option>
+            <option value="NOITE">Noite</option>
+          </select>
+        </div>
+        <div class="login-form-group" style="margin-bottom:12px;">
+          <label class="filter-label">Motivo de Origem</label>
+          <input type="text" id="inputCompensacaoMotivo" class="filter-select" style="width:100%;" value="Compensação decorrente de ausência / atrasos">
+        </div>
         <div class="login-form-group">
-          <label class="filter-label">Orientações e Critérios de Cumprimento</label>
-          <textarea id="compObs" class="filter-select" style="width:100%; height:60px; resize:vertical;" placeholder="Instruções para o aluno cumprir a compensação..."></textarea>
+          <label class="filter-label">Atividade Prática Prescrita *</label>
+          <textarea id="inputCompensacaoAtividade" class="filter-select" style="width:100%; height:60px; resize:vertical;" placeholder="Ex: Realização e entrega de atividade prática no laboratório..."></textarea>
         </div>
       </div>
       <div class="modal-footer" style="justify-content:flex-end; display:flex; gap:8px;">
-        <button type="button" class="btn btn-secondary" onclick="window.portalOrientadorController.fecharModalCompensacao()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarCompensacao()">Agendar Compensação</button>
+        <button type="button" class="btn btn-secondary" onclick="window.app.fecharModal('modalAgendarCompensacaoOrientador')">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarAgendamentoCompensacao()">Agendar Compensação</button>
       </div>
     </div>
   </div>
 
   <!-- 4. Modal: Validar / Homologar Atestado -->
-  <div id="modalValidarAtestadoOrientador" class="modal-overlay" style="display:none;">
+  <div id="modalValidarAtestadoOrientador" class="modal-overlay">
     <div class="modal-box" style="max-width:520px;">
       <div class="modal-header">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
           Homologação de Atestado / Justificativa
         </h3>
-        <button type="button" class="btn-close-modal" onclick="window.portalOrientadorController.fecharModalValidarAtestado()">&times;</button>
+        <button type="button" class="btn-close-modal" onclick="window.app.fecharModal('modalValidarAtestadoOrientador')">&times;</button>
       </div>
       <div class="modal-body">
-        <input type="hidden" id="validaAtestadoId">
-        <div id="validaAtestadoAlunoInfo" style="margin-bottom:14px;"></div>
-        <div class="login-form-group" style="margin-bottom:12px;">
-          <label class="filter-label">Decisão Oficial da Orientação *</label>
-          <select id="validaAtestadoStatus" class="filter-select" style="width:100%;">
-            <option value="ABONADA">Abonar Faltas (Dispensa D no Diário Docente)</option>
-            <option value="A_COMPENSAR">Deferir com Compensação de Ausência</option>
-            <option value="INJUSTIFICADA">Indeferir / Manter como Falta Injustificada (F)</option>
-          </select>
+        <input type="hidden" id="validarAtestadoId">
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:14px; font-size:12.5px;">
+          <div>Aluno: <strong id="validarAtestadoAlunoNome">—</strong></div>
+          <div>Tipo: <span id="validarAtestadoTipo">—</span> • Período: <strong id="validarAtestadoPeriodo">—</strong></div>
+          <div style="margin-top:4px; color:#475569;">Motivo declarado: <em id="validarAtestadoMotivo">—</em></div>
         </div>
-        <div class="login-form-group">
-          <label class="filter-label">Parecer Técnico da Orientadora *</label>
-          <textarea id="validaAtestadoParecer" class="filter-select" style="width:100%; height:75px; resize:vertical;" placeholder="Fundamentação da decisão institucional..."></textarea>
+        <div class="login-form-group" style="margin-bottom:12px;">
+          <label class="filter-label">Parecer Técnico da Orientadora (Opcional)</label>
+          <textarea id="validarAtestadoParecer" class="filter-select" style="width:100%; height:65px; resize:vertical;" placeholder="Observações pedagógicas ou fundamento da decisão..."></textarea>
         </div>
       </div>
-      <div class="modal-footer" style="justify-content:flex-end; display:flex; gap:8px;">
-        <button type="button" class="btn btn-secondary" onclick="window.portalOrientadorController.fecharModalValidarAtestado()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="window.portalOrientadorController.salvarValidacaoAtestado()">Concluir Homologação</button>
+      <div class="modal-footer" style="justify-content:space-between; display:flex; gap:8px;">
+        <button type="button" class="btn btn-secondary" onclick="window.app.fecharModal('modalValidarAtestadoOrientador')">Cancelar</button>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn btn-danger btn-sm" onclick="window.portalOrientadorController.confirmarValidacaoAtestado('INJUSTIFICADA')">✕ Recusar</button>
+          <button type="button" class="btn btn-warning btn-sm" onclick="window.portalOrientadorController.confirmarValidacaoAtestado('A_COMPENSAR')">⚖️ Compensar</button>
+          <button type="button" class="btn btn-success btn-sm" onclick="window.portalOrientadorController.confirmarValidacaoAtestado('ABONADA')">✓ Abonar (D)</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- 5. Modal: Prontuário Individual do Aluno -->
-  <div id="modalProntuarioAluno" class="modal-overlay" style="display:none;">
+  <div id="modalProntuarioAluno" class="modal-overlay">
     <div class="modal-box" style="max-width:760px; max-height:90vh; overflow-y:auto;">
       <div class="modal-header">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           Prontuário Integrado de Qualidade de Vida & Assiduidade
         </h3>
-        <button type="button" class="btn-close-modal" onclick="window.portalOrientadorController.fecharModalProntuario()">&times;</button>
+        <button type="button" class="btn-close-modal" onclick="window.app.fecharModal('modalProntuarioAluno')">&times;</button>
       </div>
-      <div class="modal-body" id="prontuarioModalConteudo">
+      <div class="modal-body" id="prontuarioAlunoContent">
         <!-- Preenchido dinamicamente via getProntuarioAluno -->
       </div>
       <div class="modal-footer" style="justify-content:flex-end; display:flex;">
-        <button type="button" class="btn btn-secondary" onclick="window.portalOrientadorController.fecharModalProntuario()">Fechar Prontuário</button>
+        <button type="button" class="btn btn-secondary" onclick="window.app.fecharModal('modalProntuarioAluno')">Fechar Prontuário</button>
       </div>
     </div>
   </div>
@@ -4344,22 +4598,22 @@
 
 
   <!-- Scripts da Aplicação -->
-  <script src="js/db.js?v=10"></script>
-  <script src="js/auth.js?v=10"></script>
-  <script src="js/configuracoes.js?v=10"></script>
-  <script src="js/diario.js?v=10"></script>
-  <script src="js/subturmas.js?v=10"></script>
-  <script src="js/ocorrencias.js?v=10"></script>
-  <script src="js/compensacoes.js?v=10"></script>
-  <script src="js/notas.js?v=10"></script>
-  <script src="js/sintese.js?v=10"></script>
-  <script src="js/relatorios.js?v=10"></script>
-  <script src="js/assistente.js?v=10"></script>
-  <script src="js/coordenador.js?v=10"></script>
-  <script src="js/orientador-comp.js?v=10"></script>
-  <script src="js/portal-orientador.js?v=12"></script>
-  <script src="js/portal-aluno.js?v=12"></script>
-  <script src="js/app.js?v=10"></script>
+  <script src="js/db.js?v=11"></script>
+  <script src="js/auth.js?v=11"></script>
+  <script src="js/configuracoes.js?v=11"></script>
+  <script src="js/diario.js?v=11"></script>
+  <script src="js/subturmas.js?v=11"></script>
+  <script src="js/ocorrencias.js?v=11"></script>
+  <script src="js/compensacoes.js?v=11"></script>
+  <script src="js/notas.js?v=11"></script>
+  <script src="js/sintese.js?v=11"></script>
+  <script src="js/relatorios.js?v=11"></script>
+  <script src="js/assistente.js?v=11"></script>
+  <script src="js/coordenador.js?v=11"></script>
+  <script src="js/orientador-comp.js?v=11"></script>
+  <script src="js/portal-orientador.js?v=11"></script>
+  <script src="js/portal-aluno.js?v=11"></script>
+  <script src="js/app.js?v=11"></script>
 </body>
 
 </html>

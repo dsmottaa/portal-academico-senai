@@ -2384,56 +2384,67 @@ class RenovaDB {
           this.data.calendarioOficial = JSON.parse(JSON.stringify(INITIAL_DB.calendarioOficial));
         }
 
-        // Migração: garante usuário Orientador no sistema
-        if (!this.data.usuarios || !this.data.usuarios.some(u => u.perfil === 'ORIENTADOR' || u.email === 'orientador@senai.br')) {
-          if (!this.data.usuarios) this.data.usuarios = JSON.parse(JSON.stringify(INITIAL_DB.usuarios));
-          else {
-            this.data.usuarios.push({
-              id: 10,
-              cpf: '555.666.777-88',
-              cpfAlternativo: '55566677788',
-              email: 'orientador@senai.br',
-              emailAlternativo: 'carla.mendes@sp.senai.br',
-              senha: '123',
-              nome: 'CARLA BEATRIZ MENDES',
-              perfil: 'ORIENTADOR',
-              cargo: 'Analista de Qualidade de Vida e Acompanhamento',
-              matriculaFuncional: 'SENAI-ORI-2024-015'
-            });
-          }
-          this.persist();
+        // Migração defensiva: garante usuário Orientador no sistema
+        if (!this.data.usuarios || !Array.isArray(this.data.usuarios)) {
+          this.data.usuarios = JSON.parse(JSON.stringify(INITIAL_DB.usuarios || []));
+        }
+        if (!this.data.usuarios.some(u => u.perfil === 'ORIENTADOR' || u.email === 'orientador@senai.br')) {
+          this.data.usuarios.push({
+            id: 10,
+            cpf: '555.666.777-88',
+            cpfAlternativo: '55566677788',
+            email: 'orientador@senai.br',
+            emailAlternativo: 'carla.mendes@sp.senai.br',
+            senha: '123',
+            nome: 'CARLA BEATRIZ MENDES',
+            perfil: 'ORIENTADOR',
+            cargo: 'Analista de Qualidade de Vida e Acompanhamento',
+            matriculaFuncional: 'SENAI-ORI-2024-015'
+          });
         }
 
-        // Migração: garante coleções do Orientador (atendimentos e contatos)
-        if (!this.data.atendimentosOrientacao || this.data.atendimentosOrientacao.length === 0) {
-          this.data.atendimentosOrientacao = JSON.parse(JSON.stringify(INITIAL_DB.atendimentosOrientacao));
+        // Migração defensiva: garante coleções do Orientador (atendimentos e contatos)
+        if (!Array.isArray(this.data.atendimentosOrientacao) || this.data.atendimentosOrientacao.length === 0) {
+          this.data.atendimentosOrientacao = (INITIAL_DB.atendimentosOrientacao && Array.isArray(INITIAL_DB.atendimentosOrientacao))
+            ? JSON.parse(JSON.stringify(INITIAL_DB.atendimentosOrientacao))
+            : [];
         }
-        if (!this.data.contatosOrientacao) {
-          this.data.contatosOrientacao = JSON.parse(JSON.stringify(INITIAL_DB.contatosOrientacao || []));
-        }
-
-        // Migração: garante status nas justificativas e sincroniza
-        if (this.data.justificativas) {
-          if (this.data.justificativas.length < 4) {
-            this.data.justificativas = JSON.parse(JSON.stringify(INITIAL_DB.justificativas));
-          } else {
-            this.data.justificativas.forEach(j => {
-              if (!j.status) j.status = 'ABONADA';
-            });
-          }
+        if (!Array.isArray(this.data.contatosOrientacao)) {
+          this.data.contatosOrientacao = (INITIAL_DB.contatosOrientacao && Array.isArray(INITIAL_DB.contatosOrientacao))
+            ? JSON.parse(JSON.stringify(INITIAL_DB.contatosOrientacao))
+            : [];
         }
 
-        // Migração: garante compensações atualizadas
-        if (this.data.compensacoes) {
-          if (this.data.compensacoes.length < 3) {
-            this.data.compensacoes = JSON.parse(JSON.stringify(INITIAL_DB.compensacoes));
-          } else {
-            this.data.compensacoes.forEach(c => {
-              if (!c.status) c.status = 'PENDENTE';
-              if (!c.turno) c.turno = 'CONTRATURNO';
-            });
-          }
+        // Migração defensiva: garante justificativas sempre como array válido
+        if (!Array.isArray(this.data.justificativas) || this.data.justificativas.length === 0) {
+          this.data.justificativas = (INITIAL_DB.justificativas && Array.isArray(INITIAL_DB.justificativas))
+            ? JSON.parse(JSON.stringify(INITIAL_DB.justificativas))
+            : [];
+        } else {
+          this.data.justificativas.forEach(j => {
+            if (!j.status) j.status = 'ABONADA';
+          });
         }
+
+        // Migração defensiva: garante compensações sempre como array válido
+        if (!Array.isArray(this.data.compensacoes) || this.data.compensacoes.length === 0) {
+          this.data.compensacoes = (INITIAL_DB.compensacoes && Array.isArray(INITIAL_DB.compensacoes))
+            ? JSON.parse(JSON.stringify(INITIAL_DB.compensacoes))
+            : [];
+        } else {
+          this.data.compensacoes.forEach(c => {
+            if (!c.status) c.status = 'PENDENTE';
+            if (!c.turno) c.turno = 'CONTRATURNO';
+          });
+        }
+
+        // Migração defensiva: garante turmas ativas
+        if (!Array.isArray(this.data.turmas) || this.data.turmas.length === 0) {
+          this.data.turmas = JSON.parse(JSON.stringify(INITIAL_DB.turmas || []));
+        }
+
+        // Persiste as coleções migradas imediatamente
+        this.persist();
       } catch (e) {
         console.error('Erro ao ler DB:', e);
         this.data = JSON.parse(JSON.stringify(INITIAL_DB));
@@ -2485,8 +2496,21 @@ class RenovaDB {
 
   // --- Turmas ---
   getTurmas(filtro = 'EM_ANDAMENTO') {
+    if (!this.data || !Array.isArray(this.data.turmas) || this.data.turmas.length === 0) {
+      if (typeof INITIAL_DB !== 'undefined' && Array.isArray(INITIAL_DB.turmas)) {
+        if (!this.data) this.data = {};
+        this.data.turmas = JSON.parse(JSON.stringify(INITIAL_DB.turmas));
+        this.persist();
+      } else {
+        return [];
+      }
+    }
     if (filtro === 'TODOS') return this.data.turmas;
-    return this.data.turmas.filter(t => t.status === filtro);
+    const filtradas = this.data.turmas.filter(t => t.status === filtro);
+    if (filtradas.length === 0 && this.data.turmas.length > 0) {
+      return this.data.turmas; // Fallback: retorna as turmas ativas/existentes
+    }
+    return filtradas;
   }
 
   getTurmaById(id) {
@@ -2788,11 +2812,20 @@ class RenovaDB {
   }
 
   // --- JUSTIFICATIVAS E ATESTADOS ---
-  getJustificativas(turmaId = null, status = null) {
-    if (!this.data.justificativas) this.data.justificativas = [];
+  getJustificativas(filtro = null, status = null) {
+    if (!this.data || !Array.isArray(this.data.justificativas)) {
+      this.data.justificativas = (typeof INITIAL_DB !== 'undefined' && Array.isArray(INITIAL_DB.justificativas))
+        ? JSON.parse(JSON.stringify(INITIAL_DB.justificativas))
+        : [];
+    }
     return this.data.justificativas.filter(j => {
-      if (turmaId && j.turmaId && Number(j.turmaId) !== Number(turmaId)) return false;
-      if (status && j.status !== status) return false;
+      if (filtro) {
+        const fId = Number(filtro);
+        const matchTurma = j.turmaId && Number(j.turmaId) === fId;
+        const matchAluno = j.alunoId && Number(j.alunoId) === fId;
+        if (!matchTurma && !matchAluno) return false;
+      }
+      if (status && status !== 'TODAS' && j.status !== status) return false;
       return true;
     });
   }
@@ -2901,10 +2934,19 @@ class RenovaDB {
   }
 
   // --- COMPENSAÇÕES ---
-  getCompensacoes(turmaId = null, status = null) {
-    if (!this.data.compensacoes) this.data.compensacoes = [];
+  getCompensacoes(filtro = null, status = null) {
+    if (!this.data || !Array.isArray(this.data.compensacoes)) {
+      this.data.compensacoes = (typeof INITIAL_DB !== 'undefined' && Array.isArray(INITIAL_DB.compensacoes))
+        ? JSON.parse(JSON.stringify(INITIAL_DB.compensacoes))
+        : [];
+    }
     return this.data.compensacoes.filter(c => {
-      if (turmaId && c.turmaId && Number(c.turmaId) !== Number(turmaId)) return false;
+      if (filtro) {
+        const fId = Number(filtro);
+        const matchTurma = c.turmaId && Number(c.turmaId) === fId;
+        const matchAluno = c.alunoId && Number(c.alunoId) === fId;
+        if (!matchTurma && !matchAluno) return false;
+      }
       if (status && status !== 'TODAS' && c.status !== status) return false;
       return true;
     });
@@ -3067,12 +3109,15 @@ class RenovaDB {
   // --- RADAR DO DIA DO ORIENTADOR (FONTE ÚNICA DE VERDADE) ---
   getRadarOrientador(turmaId = null) {
     const targetTurmaId = turmaId ? Number(turmaId) : 1;
-    const turma = (this.data.turmas || []).find(t => t.id === targetTurmaId);
-    const alunos = this.getAlunosPorTurma(targetTurmaId, 'TODOS')
+    const turma = (this.data.turmas || []).find(t => t.id === targetTurmaId) || (this.data.turmas && this.data.turmas[0]) || null;
+    let alunos = this.getAlunosPorTurma(targetTurmaId, 'TODOS')
       .filter(a => a.statusMatricula === 'ATIVO');
+    if (alunos.length === 0 && this.data.alunos) {
+      alunos = this.data.alunos.filter(a => a.statusMatricula === 'ATIVO');
+    }
 
     const hoje = new Date().toISOString().split('T')[0];
-    const contatosHoje = this.getContatosHoje();
+    const contatosHoje = (this.getContatosHoje && this.getContatosHoje()) || [];
     const mapContatosHoje = new Map();
     contatosHoje.forEach(c => mapContatosHoje.set(c.alunoId, c));
 
@@ -3088,9 +3133,9 @@ class RenovaDB {
     );
 
     // Faltas sem justificativa & Atrasos
-    const sintese = this.getSinteseConsolidada(targetTurmaId);
+    const sintese = (this.getSinteseConsolidada && this.getSinteseConsolidada(targetTurmaId)) || { alunos: [] };
     const sinteseMap = new Map();
-    (sintese.alunos || []).forEach(item => sinteseMap.set(item.aluno.id, item));
+    ((sintese && sintese.alunos) || []).forEach(item => sinteseMap.set(item.aluno.id, item));
 
     let totalFaltasSemJust = 0;
     let total5Atrasos = 0;

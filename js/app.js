@@ -160,7 +160,11 @@ class AppController {
       if (window.compensacoesController) window.compensacoesController.init();
     } else if (tabId.startsWith('orientador')) {
       if (window.portalOrientadorController) {
-        window.portalOrientadorController.recarregarTelaAtiva();
+        if (typeof window.portalOrientadorController.recarregarTelaAtiva === 'function') {
+          window.portalOrientadorController.recarregarTelaAtiva();
+        } else if (typeof window.portalOrientadorController.recarregarAbaAtiva === 'function') {
+          window.portalOrientadorController.recarregarAbaAtiva();
+        }
       } else {
         this.renderizarPortalOrientador();
       }
@@ -638,8 +642,10 @@ class AppController {
     let targetSecId = `tabSection_${tabId}`;
     if (tabId === 'fechamento-diario' || tabId === 'fechamento_diario') {
       targetSecId = 'tabSection_fechamento_diario';
-    } else if (tabId.startsWith('orientador')) {
-      targetSecId = 'tabSection_orientador';
+    } else if (tabId === 'orientador') {
+      targetSecId = 'tabSection_orientador_radar';
+    } else if (tabId.startsWith('orientador_')) {
+      targetSecId = `tabSection_${tabId}`;
     }
     const activeSec = document.getElementById(targetSecId);
     if (activeSec) {
@@ -700,8 +706,10 @@ class AppController {
     } else if (tabId.startsWith('orientador')) {
       const subAba = (tabId === 'orientador' || tabId === 'orientador_radar') ? 'radar' : tabId.replace('orientador_', '');
       if (window.portalOrientadorController) {
+        // init() populates selects and sets turmaId; navegarAba() shows/hides the right subview
+        window.portalOrientadorController.currentSubTab = subAba;
         window.portalOrientadorController.init();
-        window.portalOrientadorController.navegarAba(subAba);
+        // navegarAba called inside init(); no need to call twice
       } else {
         this.renderizarPortalOrientador();
       }
