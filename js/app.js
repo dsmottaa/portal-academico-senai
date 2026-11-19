@@ -153,13 +153,17 @@ class AppController {
     const tabId = this.currentTab;
     if (tabId === 'aluno') {
       this.renderizarPortalAluno();
+      if (window.portalAlunoController) window.portalAlunoController.renderizarSecaoOrientacao();
     } else if (tabId === 'sintese') {
       if (window.sinteseController) window.sinteseController.init();
     } else if (tabId === 'compensacoes') {
       if (window.compensacoesController) window.compensacoesController.init();
-    } else if (tabId === 'orientador') {
-      this.renderizarPortalOrientador();
-      if (window.orientadorCompController) window.orientadorCompController.init();
+    } else if (tabId.startsWith('orientador')) {
+      if (window.portalOrientadorController) {
+        window.portalOrientadorController.recarregarTelaAtiva();
+      } else {
+        this.renderizarPortalOrientador();
+      }
     } else if (tabId === 'coordenador') {
       if (window.coordenadorController) window.coordenadorController.init();
     } else if (tabId === 'diario') {
@@ -257,7 +261,7 @@ class AppController {
     } else if (perfilEscolhido === 'ALUNO') {
       this.currentTab = 'aluno';
     } else if (perfilEscolhido === 'ORIENTADOR') {
-      this.currentTab = 'orientador';
+      this.currentTab = 'orientador_radar';
     }
 
     this.mostrarPortal();
@@ -634,6 +638,8 @@ class AppController {
     let targetSecId = `tabSection_${tabId}`;
     if (tabId === 'fechamento-diario' || tabId === 'fechamento_diario') {
       targetSecId = 'tabSection_fechamento_diario';
+    } else if (tabId.startsWith('orientador')) {
+      targetSecId = 'tabSection_orientador';
     }
     const activeSec = document.getElementById(targetSecId);
     if (activeSec) {
@@ -688,9 +694,17 @@ class AppController {
     } else if (tabId === 'aluno') {
       this.renderizarPortalAluno();
       this.renderizarPrazosOficiaisAluno();
-    } else if (tabId === 'orientador') {
-      this.renderizarPortalOrientador();
-      if (window.orientadorCompController) { window.orientadorCompController.init(); }
+      if (window.portalAlunoController) {
+        window.portalAlunoController.init();
+      }
+    } else if (tabId.startsWith('orientador')) {
+      const subAba = (tabId === 'orientador' || tabId === 'orientador_radar') ? 'radar' : tabId.replace('orientador_', '');
+      if (window.portalOrientadorController) {
+        window.portalOrientadorController.init();
+        window.portalOrientadorController.navegarAba(subAba);
+      } else {
+        this.renderizarPortalOrientador();
+      }
     }
 
     // Aplica restrições de somente leitura se o usuário for Coordenador
@@ -1206,9 +1220,9 @@ class AppController {
       this.currentTab = 'coordenador';
     } else if (isAluno && (this.currentTab === 'cursos' || this.currentTab === 'inicio' || this.currentTab === 'coordenador' || this.currentTab === 'orientador')) {
       this.currentTab = 'aluno';
-    } else if (isOrientador && (this.currentTab === 'cursos' || this.currentTab === 'inicio' || this.currentTab === 'coordenador' || this.currentTab === 'aluno')) {
-      this.currentTab = 'orientador';
-    } else if (isProfessor && (this.currentTab === 'coordenador' || this.currentTab === 'aluno' || this.currentTab === 'orientador')) {
+    } else if (isOrientador && (this.currentTab === 'cursos' || this.currentTab === 'inicio' || this.currentTab === 'coordenador' || this.currentTab === 'aluno' || this.currentTab === 'orientador')) {
+      this.currentTab = 'orientador_radar';
+    } else if (isProfessor && (this.currentTab === 'coordenador' || this.currentTab === 'aluno' || this.currentTab.startsWith('orientador'))) {
       this.currentTab = 'cursos';
     } else if (isProfessor && this.currentTab === 'cursos') {
       // Mantém cursos se o professor já estava lá

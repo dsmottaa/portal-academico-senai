@@ -137,10 +137,15 @@ class DiarioController {
           btnText = 'F ✕';
           title = 'Falta (F) • Clique para alternar para Justificada (J)';
           faltasNestaChamada++;
-        } else if (status === 'J' || status === 'D') {
+        } else if (status === 'J') {
           btnClass = 'justificada';
           btnText = 'J ⚖️';
           title = 'Falta Justificada / Compensada (J) • Clique para alternar para Presente (P)';
+          presencasNestaChamada++;
+        } else if (status === 'D') {
+          btnClass = 'justificada';
+          btnText = 'D 📜';
+          title = 'Dispensa com Atestado Homologado pela Orientação (D) • Clique para alternar para Presente (P)';
           presencasNestaChamada++;
         } else {
           presencasNestaChamada++;
@@ -220,8 +225,15 @@ class DiarioController {
     const statusAtual = (this.frequencias[alunoId][aulaIdx] || 'C').toUpperCase();
     let proximoStatus = 'C';
 
+    const justif = window.db && window.db.getJustificativaParaData ? window.db.getJustificativaParaData(alunoId, this.dataAula) : null;
+
     if (statusAtual === 'C' || statusAtual === 'P') {
-      proximoStatus = 'F'; // Falta
+      if (justif) {
+        proximoStatus = 'D'; // Bloqueia falta e converte em Dispensa por Atestado Homologado
+        if (window.app) window.app.mostrarToast(`Aluno com atestado homologado pela Orientação (${justif.motivo}). Ausência lançada como Dispensa/Abonada (D).`, 'info');
+      } else {
+        proximoStatus = 'F'; // Falta
+      }
     } else if (statusAtual === 'F') {
       proximoStatus = 'J'; // Justificada / Compensada
     } else {

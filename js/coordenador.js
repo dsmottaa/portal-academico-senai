@@ -108,6 +108,56 @@ class CoordenadorController {
         </div>
       </div>
     `;
+
+    // Alertas de Encaminhamentos da Orientação Educacional
+    const encaminhados = (window.db && window.db.data && window.db.data.atendimentosOrientacao || [])
+      .filter(a => a.encaminhamento === 'COORDENACAO');
+
+    let elAlertas = document.getElementById('coordAlertasOrientacaoContainer');
+    if (!elAlertas) {
+      elAlertas = document.createElement('div');
+      elAlertas.id = 'coordAlertasOrientacaoContainer';
+      if (el.parentNode) {
+        el.parentNode.insertBefore(elAlertas, el.nextSibling);
+      }
+    }
+
+    if (elAlertas) {
+      if (encaminhados.length > 0) {
+        elAlertas.innerHTML = `
+          <div style="background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #f59e0b; border-radius:10px; padding:16px; margin:18px 0; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:18px;">⚠️</span>
+                <strong style="color:#92400e; font-size:13.5px;">Encaminhamentos da Orientação Educacional (${encaminhados.length})</strong>
+              </div>
+              <span style="font-size:11.5px; background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:9999px; font-weight:700;">Ação Intersetorial Requerida</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;">
+              ${encaminhados.map(enc => {
+                const aluno = window.db.getAlunoById(enc.alunoId);
+                const nome = aluno ? aluno.nome : `Aluno #${enc.alunoId}`;
+                return `
+                  <div style="background:#ffffff; border:1px solid #fef08a; border-radius:8px; padding:12px; font-size:12.5px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                      <strong style="color:#0f172a;">${nome}</strong>
+                      <span style="font-size:11px; color:#64748b;">${enc.data}</span>
+                    </div>
+                    <div style="color:#64748b; font-size:11.5px; margin-bottom:6px;">Foco: <strong>${enc.foco}</strong> • Tipo: ${enc.tipo}</div>
+                    <div style="color:#334155; margin-bottom:8px; line-height:1.4;"><em>"${enc.resumo}"</em></div>
+                    ${enc.combinados ? `<div style="font-size:11px; color:#b45309; background:#fffdf5; padding:4px 8px; border-radius:4px; border:1px dashed #fde68a;"><strong>Combinados:</strong> ${enc.combinados}</div>` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+        elAlertas.style.display = 'block';
+      } else {
+        elAlertas.style.display = 'none';
+        elAlertas.innerHTML = '';
+      }
+    }
   }
 
   // ─── LISTAGEM DE TURMAS ──────────────────────────────────────────────────────

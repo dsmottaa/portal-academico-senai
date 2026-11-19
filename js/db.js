@@ -116,6 +116,18 @@ const INITIAL_DB = {
       nome: 'Yasmin Ribeiro Costa',
       perfil: 'ALUNO',
       matriculaFuncional: 'SENAI-ALU-2026-052'
+    },
+    {
+      id: 10,
+      cpf: '555.666.777-88',
+      cpfAlternativo: '55566677788',
+      email: 'orientador@senai.br',
+      emailAlternativo: 'carla.mendes@sp.senai.br',
+      senha: '123',
+      nome: 'CARLA BEATRIZ MENDES',
+      perfil: 'ORIENTADOR',
+      cargo: 'Analista de Qualidade de Vida e Acompanhamento',
+      matriculaFuncional: 'SENAI-ORI-2024-015'
     }
   ],
 
@@ -1349,19 +1361,74 @@ const INITIAL_DB = {
     }
   ],
 
-  // Justificativas cadastradas pela COORDENAÇÃO (Bloqueia Faltas no Diário)
+  // Justificativas e Atestados (Compartilhado entre Aluno, Orientação e Coordenação)
   justificativas: [
     {
       id: 1,
-      alunoId: 3, // Carlos Eduardo Moreira
+      alunoId: 3,
       alunoNome: 'Carlos Eduardo Moreira',
+      turmaId: 1,
       tipo: 'Atestado Médico',
       dataInicio: '2026-10-19',
       dataFim: '2026-10-25',
       motivo: 'Procedimento cirúrgico de urgência e repouso médico recomendado.',
       documento: 'atestado_medico_crm_54210.pdf',
+      status: 'ABONADA',
+      parecer: 'Atestado médico de 7 dias homologado conforme CID-10.',
       cadastradoPor: 'PAULO RICARDO MENDONÇA (Coordenação)',
-      dataCadastro: '2026-10-19'
+      homologadoPor: 'CARLA BEATRIZ MENDES (Orientação)',
+      dataCadastro: '2026-10-19',
+      dataHomologacao: '2026-10-19'
+    },
+    {
+      id: 2,
+      alunoId: 52,
+      alunoNome: 'Yasmin Ribeiro Costa',
+      turmaId: 1,
+      tipo: 'Declaração de Consulta',
+      dataInicio: '2026-11-16',
+      dataFim: '2026-11-16',
+      motivo: 'Consulta médica oftalmológica e exames complementares de rotina.',
+      documento: 'declaracao_oftalmo_yasmin.pdf',
+      status: 'PENDENTE',
+      parecer: '',
+      cadastradoPor: 'Yasmin Ribeiro Costa (Aluno)',
+      homologadoPor: '',
+      dataCadastro: '2026-11-16'
+    },
+    {
+      id: 3,
+      alunoId: 1,
+      alunoNome: 'Arthur Ribeiro Santos',
+      turmaId: 1,
+      tipo: 'Transporte Público',
+      dataInicio: '2026-11-10',
+      dataFim: '2026-11-10',
+      motivo: 'Pane elétrica com paralisação na Linha 3-Vermelha do Metrô.',
+      documento: 'comprovante_metro_sp.pdf',
+      status: 'A_COMPENSAR',
+      parecer: 'Encaminhado para 2h de compensação de conteúdo em contraturno.',
+      cadastradoPor: 'Arthur Ribeiro Santos (Aluno)',
+      homologadoPor: 'CARLA BEATRIZ MENDES (Orientação)',
+      dataCadastro: '2026-11-10',
+      dataHomologacao: '2026-11-11'
+    },
+    {
+      id: 4,
+      alunoId: 5,
+      alunoNome: 'Enzo Gabriel Castro',
+      turmaId: 1,
+      tipo: 'Motivo Pessoal',
+      dataInicio: '2026-11-05',
+      dataFim: '2026-11-05',
+      motivo: 'Acordou atrasado e perdeu o transporte escolar particular.',
+      documento: '',
+      status: 'INJUSTIFICADA',
+      parecer: 'Ausência não amparada pelos critérios de abono legal do regimento SENAI.',
+      cadastradoPor: 'CARLA BEATRIZ MENDES (Orientação)',
+      homologadoPor: 'CARLA BEATRIZ MENDES (Orientação)',
+      dataCadastro: '2026-11-05',
+      dataHomologacao: '2026-11-05'
     }
   ],
 
@@ -1369,17 +1436,116 @@ const INITIAL_DB = {
   compensacoes: [
     {
       id: 1,
-      alunoId: 5, // Enzo Gabriel Castro
+      alunoId: 5,
       alunoNome: 'Enzo Gabriel Castro',
       turmaId: 1,
-      motivoOrigem: 'Acúmulo de 5 atrasos na Unidade Curricular UC-04',
-      horasObrigacao: 2,
-      dataLimite: '2026-11-15',
+      motivoOrigem: 'Acúmulo de 5 atrasos na Unidade Curricular de Programação',
+      horasObrigacao: 4,
+      dataLimite: '2026-11-28',
+      dataAgendada: '2026-11-20',
+      turno: 'TARDE',
       dataCumprimento: null,
-      status: 'PENDENTE',
+      status: 'AGENDADA',
       atividadeDescricao: 'Elaboração e entrega de estudo de caso prático referente ao PTD-WEB-01.',
       notificacaoCoordEnviada: true,
-      criadoEm: '2026-10-21'
+      criadoEm: '2026-10-21',
+      registradoPor: 'CARLA BEATRIZ MENDES (Orientação)'
+    },
+    {
+      id: 2,
+      alunoId: 1,
+      alunoNome: 'Arthur Ribeiro Santos',
+      turmaId: 1,
+      motivoOrigem: 'Compensação de falta decorrente de paralisação de transporte',
+      horasObrigacao: 2,
+      dataLimite: '2026-11-30',
+      dataAgendada: '2026-11-22',
+      turno: 'CONTRATURNO',
+      dataCumprimento: null,
+      status: 'PENDENTE',
+      atividadeDescricao: 'Exercícios práticos de reposição de aula de laboratório de Front-End.',
+      notificacaoCoordEnviada: false,
+      criadoEm: '2026-11-11',
+      registradoPor: 'CARLA BEATRIZ MENDES (Orientação)'
+    },
+    {
+      id: 3,
+      alunoId: 7,
+      alunoNome: 'Gabriel Henrique Ramos',
+      turmaId: 1,
+      motivoOrigem: 'Reposição de aula prática de banco de dados',
+      horasObrigacao: 4,
+      dataLimite: '2026-11-15',
+      dataAgendada: '2026-11-12',
+      turno: 'MANHA',
+      dataCumprimento: '2026-11-12',
+      status: 'CUMPRIDO',
+      atividadeDescricao: 'Resolução de lista de modelagem relacional e queries SQL 3FN.',
+      notificacaoCoordEnviada: false,
+      criadoEm: '2026-11-04',
+      registradoPor: 'CARLA BEATRIZ MENDES (Orientação)'
+    }
+  ],
+
+  // Atendimentos da Orientação Educacional (Qualidade de Vida e Acompanhamento)
+  atendimentosOrientacao: [
+    {
+      id: 1,
+      alunoId: 5,
+      turmaId: 1,
+      data: '2026-11-18',
+      horaInicio: '14:30',
+      horaFim: '15:15',
+      tipo: 'CONVOCACAO',
+      foco: 'FREQUENCIA',
+      resumo: 'Conversa de alinhamento individual sobre 5 atrasos consecutivos e impacto nas aulas práticas de desenvolvimento.',
+      combinados: 'Aluno se comprometeu a reorganizar horário de sono, adiantar 30 min a saída de casa e participar do plantão de dúvidas.',
+      encaminhamento: 'COORDENACAO',
+      status: 'REALIZADO',
+      autor: 'CARLA BEATRIZ MENDES'
+    },
+    {
+      id: 2,
+      alunoId: 52,
+      turmaId: 1,
+      data: '2026-11-21',
+      horaInicio: '10:00',
+      horaFim: '10:45',
+      tipo: 'ESPONTANEO',
+      foco: 'QUALIDADE_VIDA',
+      resumo: 'Estudante procurou a orientação relatando sobrecarga na conciliação de rotina de estudos com início de estágio técnico.',
+      combinados: 'Estruturação conjunta de quadro semanal de estudos com blocos de descanso e acompanhamento quinzenal.',
+      encaminhamento: 'NENHUM',
+      status: 'AGENDADO',
+      autor: 'CARLA BEATRIZ MENDES'
+    },
+    {
+      id: 3,
+      alunoId: 1,
+      turmaId: 1,
+      data: '2026-11-22',
+      horaInicio: '15:30',
+      horaFim: '16:00',
+      tipo: 'ACOMPANHAMENTO',
+      foco: 'COMPENSACAO',
+      resumo: 'Sessão de acompanhamento para verificação da entrega da atividade de compensação de transporte e dúvidas.',
+      combinados: 'Conclusão e envio da ficha de compensação de 2 horas até o final da semana letiva.',
+      encaminhamento: 'NENHUM',
+      status: 'AGENDADO',
+      autor: 'CARLA BEATRIZ MENDES'
+    }
+  ],
+
+  // Registro de Contatos Diários (Evita Cobranças Duplicadas no Dia)
+  contatosOrientacao: [
+    {
+      id: 1,
+      alunoId: 5,
+      data: '2026-11-18',
+      hora: '09:15',
+      canal: 'WHATSAPP',
+      observacao: 'Mensagem enviada à mãe (Dona Rosa) informando sobre atraso no início da primeira aula.',
+      autor: 'CARLA BEATRIZ MENDES'
     }
   ],
 
@@ -2217,6 +2383,57 @@ class RenovaDB {
         if (!this.data.calendarioOficial || this.data.calendarioOficial.length === 0) {
           this.data.calendarioOficial = JSON.parse(JSON.stringify(INITIAL_DB.calendarioOficial));
         }
+
+        // Migração: garante usuário Orientador no sistema
+        if (!this.data.usuarios || !this.data.usuarios.some(u => u.perfil === 'ORIENTADOR' || u.email === 'orientador@senai.br')) {
+          if (!this.data.usuarios) this.data.usuarios = JSON.parse(JSON.stringify(INITIAL_DB.usuarios));
+          else {
+            this.data.usuarios.push({
+              id: 10,
+              cpf: '555.666.777-88',
+              cpfAlternativo: '55566677788',
+              email: 'orientador@senai.br',
+              emailAlternativo: 'carla.mendes@sp.senai.br',
+              senha: '123',
+              nome: 'CARLA BEATRIZ MENDES',
+              perfil: 'ORIENTADOR',
+              cargo: 'Analista de Qualidade de Vida e Acompanhamento',
+              matriculaFuncional: 'SENAI-ORI-2024-015'
+            });
+          }
+          this.persist();
+        }
+
+        // Migração: garante coleções do Orientador (atendimentos e contatos)
+        if (!this.data.atendimentosOrientacao || this.data.atendimentosOrientacao.length === 0) {
+          this.data.atendimentosOrientacao = JSON.parse(JSON.stringify(INITIAL_DB.atendimentosOrientacao));
+        }
+        if (!this.data.contatosOrientacao) {
+          this.data.contatosOrientacao = JSON.parse(JSON.stringify(INITIAL_DB.contatosOrientacao || []));
+        }
+
+        // Migração: garante status nas justificativas e sincroniza
+        if (this.data.justificativas) {
+          if (this.data.justificativas.length < 4) {
+            this.data.justificativas = JSON.parse(JSON.stringify(INITIAL_DB.justificativas));
+          } else {
+            this.data.justificativas.forEach(j => {
+              if (!j.status) j.status = 'ABONADA';
+            });
+          }
+        }
+
+        // Migração: garante compensações atualizadas
+        if (this.data.compensacoes) {
+          if (this.data.compensacoes.length < 3) {
+            this.data.compensacoes = JSON.parse(JSON.stringify(INITIAL_DB.compensacoes));
+          } else {
+            this.data.compensacoes.forEach(c => {
+              if (!c.status) c.status = 'PENDENTE';
+              if (!c.turno) c.turno = 'CONTRATURNO';
+            });
+          }
+        }
       } catch (e) {
         console.error('Erro ao ler DB:', e);
         this.data = JSON.parse(JSON.stringify(INITIAL_DB));
@@ -2328,9 +2545,12 @@ class RenovaDB {
    * Verifica justificativa ativa na data para o aluno
    */
   getJustificativaParaData(alunoId, dataAulaStr) {
+    if (!dataAulaStr) return null;
     const dataRef = new Date(dataAulaStr + 'T00:00:00');
-    return this.data.justificativas.find(j => {
+    return (this.data.justificativas || []).find(j => {
       if (j.alunoId !== Number(alunoId)) return false;
+      const statusAbonado = j.status === 'ABONADA' || j.status === 'DEFERIDO' || (!j.status && j.tipo);
+      if (!statusAbonado) return false;
       const ini = new Date(j.dataInicio + 'T00:00:00');
       const fim = new Date(j.dataFim + 'T23:59:59');
       return dataRef >= ini && dataRef <= fim;
@@ -2567,64 +2787,487 @@ class RenovaDB {
     return item;
   }
 
-  // --- JUSTIFICATIVAS ---
-  getJustificativas() {
-    return this.data.justificativas;
-  }
-
-  addJustificativa(justificativa) {
-    const aluno = this.getAlunoById(justificativa.alunoId);
-    const novoItem = {
-      id: this.data.justificativas.length + 1,
-      ...justificativa,
-      alunoNome: aluno ? aluno.nome : 'Aluno',
-      dataCadastro: new Date().toISOString().split('T')[0]
-    };
-    this.data.justificativas.unshift(novoItem);
-    this.persist();
-    return novoItem;
-  }
-
-  // --- COMPENSAÇÕES ---
-  getCompensacoes(turmaId = null) {
-    return this.data.compensacoes.filter(c => {
-      if (turmaId && c.turmaId !== Number(turmaId)) return false;
+  // --- JUSTIFICATIVAS E ATESTADOS ---
+  getJustificativas(turmaId = null, status = null) {
+    if (!this.data.justificativas) this.data.justificativas = [];
+    return this.data.justificativas.filter(j => {
+      if (turmaId && j.turmaId && Number(j.turmaId) !== Number(turmaId)) return false;
+      if (status && j.status !== status) return false;
       return true;
     });
   }
 
-  // [Alteração 6]: Adição manual de compensação pelo professor
-  addCompensacao(compensacao) {
-    const aluno = this.getAlunoById(compensacao.alunoId);
+  addJustificativa(justificativa) {
+    if (!this.data.justificativas) this.data.justificativas = [];
+    const aluno = this.getAlunoById(justificativa.alunoId);
+    const ids = this.data.justificativas.map(j => j.id);
+    const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
     const novoItem = {
-      id: this.data.compensacoes.length + 1,
+      id: newId,
+      alunoId: Number(justificativa.alunoId),
+      alunoNome: aluno ? aluno.nome : (justificativa.alunoNome || 'Aluno'),
+      turmaId: justificativa.turmaId ? Number(justificativa.turmaId) : (aluno ? aluno.turmaId : 1),
+      tipo: justificativa.tipo || 'Atestado Médico',
+      dataInicio: justificativa.dataInicio || new Date().toISOString().split('T')[0],
+      dataFim: justificativa.dataFim || justificativa.dataInicio || new Date().toISOString().split('T')[0],
+      motivo: justificativa.motivo || '',
+      documento: justificativa.documento || 'atestado_anexo.pdf',
+      status: justificativa.status || 'PENDENTE', // PENDENTE | ABONADA | A_COMPENSAR | INJUSTIFICADA
+      parecer: justificativa.parecer || '',
+      cadastradoPor: justificativa.cadastradoPor || 'Portal do Aluno',
+      homologadoPor: justificativa.homologadoPor || '',
+      dataCadastro: justificativa.dataCadastro || new Date().toISOString().split('T')[0],
+      dataHomologacao: justificativa.dataHomologacao || null
+    };
+
+    this.data.justificativas.unshift(novoItem);
+
+    if (novoItem.status === 'ABONADA') {
+      this._aplicarAbonoEmAulas(novoItem.alunoId, novoItem.dataInicio, novoItem.dataFim);
+    }
+
+    this.persist();
+    return novoItem;
+  }
+
+  atualizarStatusJustificativa(id, novoStatus, parecer = '', homologadoPor = '') {
+    if (!this.data.justificativas) return null;
+    const just = this.data.justificativas.find(j => j.id === Number(id));
+    if (!just) return null;
+
+    just.status = novoStatus;
+    just.parecer = parecer.trim();
+    just.homologadoPor = homologadoPor || 'Orientação Educacional';
+    just.dataHomologacao = new Date().toISOString().split('T')[0];
+
+    // Se abonada, converte automaticamente faltas 'F' do período para Dispensa 'D' no Diário do Professor
+    if (novoStatus === 'ABONADA') {
+      this._aplicarAbonoEmAulas(just.alunoId, just.dataInicio, just.dataFim);
+      this.adicionarNotificacao(
+        'APROVACAO',
+        `Atestado Homologado • ${just.alunoNome}`,
+        `Atestado de ${just.alunoNome} (${just.dataInicio} a ${just.dataFim}) foi homologado com abono legal.`,
+        just.homologadoPor
+      );
+    } else if (novoStatus === 'A_COMPENSAR') {
+      // Se encaminhado para compensação, cria registro em compensações automaticamente
+      this.addCompensacao({
+        alunoId: just.alunoId,
+        alunoNome: just.alunoNome,
+        turmaId: just.turmaId,
+        motivoOrigem: `Compensação referente a ausência: ${just.tipo || 'Atestado'} (${just.dataInicio})`,
+        horasObrigacao: 2,
+        dataLimite: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+        status: 'PENDENTE',
+        atividadeDescricao: 'Realização de atividade prática de reposição no contraturno escolar.',
+        tipoOrigem: 'ORIENTACAO',
+        registradoPor: just.homologadoPor
+      });
+      this.adicionarNotificacao(
+        'INFO',
+        `Compensação Prescrita • ${just.alunoNome}`,
+        `Atestado analisado e encaminhado para compensação pedagógica de 2 horas.`,
+        just.homologadoPor
+      );
+    }
+
+    this.persist();
+    return just;
+  }
+
+  _aplicarAbonoEmAulas(alunoId, dataInicio, dataFim) {
+    if (!this.data.aulas || !alunoId) return;
+    const id = Number(alunoId);
+    let alterou = false;
+
+    this.data.aulas.forEach(aula => {
+      if (aula.data >= dataInicio && aula.data <= dataFim) {
+        if (aula.frequencias && aula.frequencias[id]) {
+          const arr = aula.frequencias[id];
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === 'F') {
+              arr[i] = 'D'; // Converte falta para Dispensa / Justificada oficial
+              alterou = true;
+            }
+          }
+        }
+      }
+    });
+
+    if (alterou) {
+      this.persist();
+    }
+  }
+
+  // --- COMPENSAÇÕES ---
+  getCompensacoes(turmaId = null, status = null) {
+    if (!this.data.compensacoes) this.data.compensacoes = [];
+    return this.data.compensacoes.filter(c => {
+      if (turmaId && c.turmaId && Number(c.turmaId) !== Number(turmaId)) return false;
+      if (status && status !== 'TODAS' && c.status !== status) return false;
+      return true;
+    });
+  }
+
+  addCompensacao(compensacao) {
+    if (!this.data.compensacoes) this.data.compensacoes = [];
+    const aluno = this.getAlunoById(compensacao.alunoId);
+    const ids = this.data.compensacoes.map(c => c.id);
+    const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
+    const novoItem = {
+      id: newId,
       alunoId: Number(compensacao.alunoId),
-      alunoNome: aluno ? aluno.nome : 'Aluno',
-      turmaId: aluno ? aluno.turmaId : 1,
-      motivoOrigem: compensacao.motivoOrigem || 'Compensação definida manualmente pelo professor',
+      alunoNome: aluno ? aluno.nome : (compensacao.alunoNome || 'Aluno'),
+      turmaId: compensacao.turmaId ? Number(compensacao.turmaId) : (aluno ? aluno.turmaId : 1),
+      motivoOrigem: compensacao.motivoOrigem || 'Compensação de ausência / atrasos',
       horasObrigacao: Number(compensacao.horasObrigacao) || 2,
-      dataLimite: compensacao.dataLimite || new Date().toISOString().split('T')[0],
-      dataCumprimento: null,
-      status: 'PENDENTE',
-      atividadeDescricao: compensacao.atividadeDescricao || 'Atividade a definir',
+      dataLimite: compensacao.dataLimite || new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0],
+      dataAgendada: compensacao.dataAgendada || compensacao.dataLimite || new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+      turno: compensacao.turno || 'CONTRATURNO', // MANHA | TARDE | NOITE | CONTRATURNO
+      dataCumprimento: compensacao.dataCumprimento || null,
+      status: compensacao.status || (compensacao.dataAgendada ? 'AGENDADA' : 'PENDENTE'), // PENDENTE | AGENDADA | CUMPRIDO
+      atividadeDescricao: compensacao.atividadeDescricao || 'Resolução e entrega de atividade prática no contraturno.',
       notificacaoCoordEnviada: false,
       criadoEm: new Date().toISOString().split('T')[0],
-      tipoOrigem: compensacao.tipoOrigem || 'MANUAL',
-      definidaManualmente: true
+      tipoOrigem: compensacao.tipoOrigem || 'ORIENTACAO',
+      registradoPor: compensacao.registradoPor || 'Orientador Educacional'
     };
+
     this.data.compensacoes.unshift(novoItem);
     this.persist();
     return novoItem;
   }
 
-  registrarCompensacaoCumprida(id, atividadeRelatada) {
+  registrarCompensacaoCumprida(id, observacoes = '') {
+    if (!this.data.compensacoes) return false;
     const comp = this.data.compensacoes.find(c => c.id === Number(id));
     if (!comp) return false;
+
     comp.status = 'CUMPRIDO';
     comp.dataCumprimento = new Date().toISOString().split('T')[0];
-    comp.atividadeRelatada = atividadeRelatada;
+    comp.observacoes = observacoes || 'Compensação realizada e validada.';
+
+    // Notificação ao aluno
+    this.adicionarNotificacao(
+      'INFO',
+      `Compensação Concluída • ${comp.alunoNome}`,
+      `A compensação de ${comp.horasObrigacao} horas foi registrada como cumprida com sucesso.`,
+      'Orientação Educacional'
+    );
+
     this.persist();
     return true;
+  }
+
+  // --- ATENDIMENTOS DA ORIENTAÇÃO EDUCACIONAL ---
+  getAtendimentosOrientacao(turmaId = null, alunoId = null) {
+    if (!this.data.atendimentosOrientacao) {
+      this.data.atendimentosOrientacao = JSON.parse(JSON.stringify(INITIAL_DB.atendimentosOrientacao || []));
+      this.persist();
+    }
+    return this.data.atendimentosOrientacao.filter(a => {
+      if (turmaId && a.turmaId && Number(a.turmaId) !== Number(turmaId)) return false;
+      if (alunoId && Number(a.alunoId) !== Number(alunoId)) return false;
+      return true;
+    }).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+  }
+
+  addAtendimentoOrientacao(atendimento) {
+    if (!this.data.atendimentosOrientacao) this.data.atendimentosOrientacao = [];
+    const aluno = this.getAlunoById(atendimento.alunoId);
+    const ids = this.data.atendimentosOrientacao.map(a => a.id);
+    const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
+    const novo = {
+      id: newId,
+      alunoId: Number(atendimento.alunoId),
+      alunoNome: aluno ? aluno.nome : (atendimento.alunoNome || 'Aluno'),
+      turmaId: atendimento.turmaId ? Number(atendimento.turmaId) : (aluno ? aluno.turmaId : 1),
+      data: atendimento.data || new Date().toISOString().split('T')[0],
+      horaInicio: atendimento.horaInicio || '14:00',
+      horaFim: atendimento.horaFim || '14:45',
+      tipo: atendimento.tipo || 'ACOMPANHAMENTO', // CONVOCACAO | ESPONTANEO | ACOMPANHAMENTO | RETORNO
+      foco: atendimento.foco || 'QUALIDADE_VIDA', // QUALIDADE_VIDA | FREQUENCIA | COMPENSACAO
+      resumo: atendimento.resumo || '',
+      combinados: atendimento.combinados || '',
+      encaminhamento: atendimento.encaminhamento || 'NENHUM', // NENHUM | COORDENACAO | PSICOLOGIA | ASSISTENCIA_SOCIAL
+      status: atendimento.status || 'REALIZADO', // AGENDADO | REALIZADO | FALTOU_ATENDIMENTO
+      autor: atendimento.autor || 'CARLA BEATRIZ MENDES'
+    };
+
+    this.data.atendimentosOrientacao.unshift(novo);
+
+    // Se houve encaminhamento para a Coordenação, cria ocorrência ou notificação acionável para o Coordenador
+    if (novo.encaminhamento === 'COORDENACAO') {
+      this.addOcorrencia({
+        alunoId: novo.alunoId,
+        alunoNome: novo.alunoNome,
+        origem: 'ORIENTACAO',
+        tipo: 'PEDAGOGICA',
+        titulo: `Encaminhamento da Orientação: ${novo.foco}`,
+        descricao: `Orientação registrou encaminhamento para a Coordenação. Resumo: ${novo.resumo}. Combinados: ${novo.combinados}`,
+        status: 'EM_ANALISE',
+        autor: novo.autor
+      });
+
+      this.adicionarNotificacao(
+        'ALERTA',
+        `Encaminhamento da Orientação • ${novo.alunoNome}`,
+        `Orientação Educacional encaminhou o aluno ${novo.alunoNome} para providências da Coordenação Pedagógica.`,
+        novo.autor
+      );
+    }
+
+    this.persist();
+    return novo;
+  }
+
+  // --- CONTATOS DA ORIENTAÇÃO (EVITA COBRANÇAS DUPLICADAS) ---
+  getContatosOrientacao(alunoId = null) {
+    if (!this.data.contatosOrientacao) this.data.contatosOrientacao = [];
+    return this.data.contatosOrientacao.filter(c => {
+      if (alunoId && Number(c.alunoId) !== Number(alunoId)) return false;
+      return true;
+    }).sort((a, b) => (b.data + b.hora).localeCompare(a.data + a.hora));
+  }
+
+  addContatoOrientacao(contato) {
+    if (!this.data.contatosOrientacao) this.data.contatosOrientacao = [];
+    const aluno = this.getAlunoById(contato.alunoId);
+    const ids = this.data.contatosOrientacao.map(c => c.id);
+    const newId = ids.length ? Math.max(...ids) + 1 : 1;
+
+    const agora = new Date();
+    const horaAtual = agora.toTimeString().split(' ')[0].substring(0, 5);
+
+    const novo = {
+      id: newId,
+      alunoId: Number(contato.alunoId),
+      alunoNome: aluno ? aluno.nome : 'Aluno',
+      data: contato.data || agora.toISOString().split('T')[0],
+      hora: contato.hora || horaAtual,
+      canal: contato.canal || 'WHATSAPP', // WHATSAPP | LIGACAO | PRESENCIAL | RESPONSAVEL
+      observacao: contato.observacao || 'Contato realizado com o estudante/responsável.',
+      autor: contato.autor || 'CARLA BEATRIZ MENDES'
+    };
+
+    this.data.contatosOrientacao.unshift(novo);
+    this.persist();
+    return novo;
+  }
+
+  getContatosHoje(alunoId = null) {
+    const hoje = new Date().toISOString().split('T')[0];
+    const lista = this.getContatosOrientacao(alunoId);
+    return lista.filter(c => c.data === hoje);
+  }
+
+  // --- RADAR DO DIA DO ORIENTADOR (FONTE ÚNICA DE VERDADE) ---
+  getRadarOrientador(turmaId = null) {
+    const targetTurmaId = turmaId ? Number(turmaId) : 1;
+    const turma = (this.data.turmas || []).find(t => t.id === targetTurmaId);
+    const alunos = this.getAlunosPorTurma(targetTurmaId, 'TODOS')
+      .filter(a => a.statusMatricula === 'ATIVO');
+
+    const hoje = new Date().toISOString().split('T')[0];
+    const contatosHoje = this.getContatosHoje();
+    const mapContatosHoje = new Map();
+    contatosHoje.forEach(c => mapContatosHoje.set(c.alunoId, c));
+
+    // Atestados Pendentes
+    const atestadosPendentes = (this.data.justificativas || []).filter(j => 
+      j.status === 'PENDENTE' && (!targetTurmaId || Number(j.turmaId) === targetTurmaId)
+    );
+
+    // Compensações em aberto
+    const compensacoesAbertas = (this.data.compensacoes || []).filter(c => 
+      (c.status === 'PENDENTE' || c.status === 'AGENDADA' || c.status === 'EM_ANDAMENTO') &&
+      (!targetTurmaId || Number(c.turmaId) === targetTurmaId)
+    );
+
+    // Faltas sem justificativa & Atrasos
+    const sintese = this.getSinteseConsolidada(targetTurmaId);
+    const sinteseMap = new Map();
+    (sintese.alunos || []).forEach(item => sinteseMap.set(item.aluno.id, item));
+
+    let totalFaltasSemJust = 0;
+    let total5Atrasos = 0;
+
+    const filaUrgencia = [];
+
+    alunos.forEach(al => {
+      const hist = sinteseMap.get(al.id) || { faltas: 0, atrasos: 0, freqPorcentagem: 100 };
+      const contatoHoje = mapContatosHoje.get(al.id) || null;
+      const atestadoAluno = atestadosPendentes.find(j => j.alunoId === al.id);
+      const compAluno = compensacoesAbertas.find(c => c.alunoId === al.id);
+
+      let temFaltaSemJust = hist.faltas > 0;
+      if (temFaltaSemJust) totalFaltasSemJust += hist.faltas;
+      if (hist.atrasos >= 5) total5Atrasos++;
+
+      // Checa se o aluno precisa estar na fila de urgência
+      let urgenciaScore = 0;
+      let motivoUrgencia = '';
+      let tipoUrgencia = '';
+
+      if (atestadoAluno) {
+        urgenciaScore = 100;
+        tipoUrgencia = 'ATESTADO_PENDENTE';
+        motivoUrgencia = `Atestado de ${atestadoAluno.tipo} enviado e aguardando validação`;
+      } else if (hist.faltas >= 3 || hist.freqPorcentagem < 75) {
+        urgenciaScore = 90;
+        tipoUrgencia = 'FALTAS_CRITICAS';
+        motivoUrgencia = `Frequência crítica (${hist.freqPorcentagem}%) com ${hist.faltas} faltas acumuladas`;
+      } else if (hist.atrasos >= 5) {
+        urgenciaScore = 80;
+        tipoUrgencia = 'ATRASOS_ACUMULADOS';
+        motivoUrgencia = `Reincidência de ${hist.atrasos} atrasos na unidade curricular`;
+      } else if (hist.faltas > 0) {
+        urgenciaScore = 60;
+        tipoUrgencia = 'FALTA_SEM_JUSTIFICATIVA';
+        motivoUrgencia = `${hist.faltas} falta(s) sem justificativa registrada`;
+      } else if (compAluno) {
+        urgenciaScore = 50;
+        tipoUrgencia = 'COMPENSACAO_ABERTA';
+        motivoUrgencia = `Compensação de ${compAluno.horasObrigacao}h agendada / pendente`;
+      }
+
+      if (urgenciaScore > 0) {
+        filaUrgencia.push({
+          aluno: al,
+          turma: turma,
+          hist: hist,
+          urgenciaScore,
+          tipoUrgencia,
+          motivoUrgencia,
+          contatoHoje: contatoHoje,
+          atestadoPendente: atestadoAluno || null,
+          compensacaoAberta: compAluno || null
+        });
+      }
+    });
+
+    // Ordenar fila por urgência decrescente
+    filaUrgencia.sort((a, b) => b.urgenciaScore - a.urgenciaScore);
+
+    return {
+      kpis: {
+        faltasSemJustificativa: totalFaltasSemJust,
+        alunosCom5Atrasos: total5Atrasos,
+        atestadosAguardando: atestadosPendentes.length,
+        compensacoesEmAberto: compensacoesAbertas.length
+      },
+      filaUrgencia,
+      atestadosPendentes,
+      compensacoesAbertas
+    };
+  }
+
+  // --- PRONTUÁRIO UNIFICADO DO ALUNO (LINHA DO TEMPO) ---
+  getProntuarioAluno(alunoId) {
+    const id = Number(alunoId);
+    const aluno = this.getAlunoById(id);
+    if (!aluno) return null;
+
+    const turma = (this.data.turmas || []).find(t => t.id === aluno.turmaId);
+    const sintese = this.getSinteseConsolidada(aluno.turmaId);
+    const histAluno = (sintese.alunos || []).find(item => item.aluno.id === id) || { faltas: 0, atrasos: 0, freqPorcentagem: 100 };
+
+    const atendimentos = this.getAtendimentosOrientacao(null, id);
+    const contatos = this.getContatosOrientacao(id);
+    const justificativas = (this.data.justificativas || []).filter(j => j.alunoId === id);
+    const compensacoes = (this.data.compensacoes || []).filter(c => c.alunoId === id);
+    const ocorrencias = (this.data.ocorrencias || []).filter(o => o.alunoId === id);
+
+    // Unifica em linha do tempo cronológica
+    const timeline = [];
+
+    atendimentos.forEach(a => {
+      timeline.push({
+        origemTipo: 'ATENDIMENTO',
+        data: a.data,
+        hora: a.horaInicio,
+        titulo: `Atendimento de Orientação (${a.tipo}) • Foco: ${a.foco}`,
+        descricao: a.resumo,
+        detalhes: a.combinados ? `Combinados: ${a.combinados}` : '',
+        badge: a.status === 'REALIZADO' ? 'Realizado' : 'Agendado',
+        badgeColor: a.status === 'REALIZADO' ? '#16a34a' : '#0284c7',
+        encaminhamento: a.encaminhamento !== 'NENHUM' ? `Encaminhado para: ${a.encaminhamento}` : null,
+        autor: a.autor
+      });
+    });
+
+    contatos.forEach(c => {
+      timeline.push({
+        origemTipo: 'CONTATO',
+        data: c.data,
+        hora: c.hora,
+        titulo: `Contato Realizado via ${c.canal}`,
+        descricao: c.observacao,
+        detalhes: '',
+        badge: 'Contato Hoje',
+        badgeColor: '#059669',
+        autor: c.autor
+      });
+    });
+
+    justificativas.forEach(j => {
+      timeline.push({
+        origemTipo: 'JUSTIFICATIVA',
+        data: j.dataCadastro,
+        hora: '—',
+        titulo: `Atestado / Justificativa (${j.tipo})`,
+        descricao: j.motivo,
+        detalhes: j.parecer ? `Parecer: ${j.parecer}` : '',
+        badge: j.status,
+        badgeColor: j.status === 'ABONADA' ? '#16a34a' : (j.status === 'PENDENTE' ? '#d97706' : '#be123c'),
+        autor: j.cadastradoPor
+      });
+    });
+
+    compensacoes.forEach(c => {
+      timeline.push({
+        origemTipo: 'COMPENSACAO',
+        data: c.criadoEm || c.dataLimite,
+        hora: c.turno || '—',
+        titulo: `Compensação de Ausência (${c.horasObrigacao}h)`,
+        descricao: c.motivoOrigem,
+        detalhes: `Atividade: ${c.atividadeDescricao} | Agendada para: ${c.dataAgendada || c.dataLimite}`,
+        badge: c.status,
+        badgeColor: c.status === 'CUMPRIDO' ? '#16a34a' : '#7c3aed',
+        autor: c.registradoPor || 'Orientação'
+      });
+    });
+
+    ocorrencias.forEach(o => {
+      timeline.push({
+        origemTipo: 'OCORRENCIA',
+        data: o.data,
+        hora: '—',
+        titulo: `Ocorrência (${o.tipo}) • ${o.titulo}`,
+        descricao: o.descricao,
+        detalhes: `Status: ${o.status || 'Registrado'}`,
+        badge: o.tipo,
+        badgeColor: o.tipo === 'ELOGIO' ? '#16a34a' : '#ea580c',
+        autor: o.autor
+      });
+    });
+
+    timeline.sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+    return {
+      aluno,
+      turma,
+      histAluno,
+      atendimentos,
+      contatos,
+      justificativas,
+      compensacoes,
+      ocorrencias,
+      timeline
+    };
   }
 
   // --- NOTAS E MÉDIAS ---
